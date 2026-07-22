@@ -161,6 +161,15 @@
     color: #888;
   }
 
+  .look-lens-suggestion {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #333;
+    text-transform: uppercase;
+    margin-top: 36px;
+    min-height: 12px;
+  }
+
   #view-look {
     position: relative;
   }
@@ -370,6 +379,7 @@
     <section id="view-look" class="view active">
       <div class="look-category" id="look-category">SHADE</div>
       <div class="look-prompt" id="look-prompt">Find where Amber has decided to stay after the light has moved on</div>
+      <div class="look-lens-suggestion" id="look-lens"></div>
       <div class="look-next-wrap">
         <button class="look-next" id="look-next-btn">random</button>
       </div>
@@ -611,7 +621,9 @@
 
   var lookCategoryEl = document.getElementById("look-category");
   var lookPromptEl = document.getElementById("look-prompt");
+  var lookLensEl = document.getElementById("look-lens");
   var lookNextBtn = document.getElementById("look-next-btn");
+  var lookViewEl = document.getElementById("view-look");
   var lastLook = null;
 
   function nextLook() {
@@ -626,9 +638,44 @@
     lastLook = key;
     lookCategoryEl.textContent = cat;
     lookPromptEl.textContent = prompt;
+
+    var lens = LENSES[Math.floor(Math.random() * LENSES.length)];
+    lookLensEl.textContent = lens.name;
   }
 
-  lookNextBtn.addEventListener("click", nextLook);
+  lookNextBtn.addEventListener("click", function () {
+    nextLook();
+    ensureWakeLockForLook();
+  });
+
+  /* swipe up anywhere on the LOOK screen shuffles too */
+  (function () {
+    var startX = 0, startY = 0, startT = 0, tracking = false;
+
+    lookViewEl.addEventListener("touchstart", function (e) {
+      if (e.touches.length !== 1) return;
+      tracking = true;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      startT = Date.now();
+    }, { passive: true });
+
+    lookViewEl.addEventListener("touchend", function (e) {
+      if (!tracking) return;
+      tracking = false;
+      var touch = e.changedTouches[0];
+      if (!touch) return;
+      var dx = touch.clientX - startX;
+      var dy = touch.clientY - startY;
+      var dt = Date.now() - startT;
+      if (dy < -50 && Math.abs(dx) < 60 && dt < 800) {
+        nextLook();
+        ensureWakeLockForLook();
+      }
+    }, { passive: true });
+  })();
+
+  nextLook();
 
   /* ======================================================
      COLOUR TAB — SHADES
@@ -795,16 +842,56 @@
     colour: document.getElementById("view-colour"),
     lens: document.getElementById("view-lens")
   };
+  var currentView = "look";
 
   navBtns.forEach(function (btn) {
     btn.addEventListener("click", function () {
       navBtns.forEach(function (b) { b.classList.remove("active"); });
       btn.classList.add("active");
+      currentView = btn.dataset.view;
       Object.keys(views).forEach(function (key) {
-        views[key].classList.toggle("active", key === btn.dataset.view);
+        views[key].classList.toggle("active", key === currentView);
       });
+      if (currentView === "look") {
+        ensureWakeLockForLook();
+      } else {
+        releaseWakeLock();
+      }
     });
   });
+
+  /* ======================================================
+     WAKE LOCK — keep the screen on while reading a prompt
+     ====================================================== */
+
+  var wakeLock = null;
+
+  function ensureWakeLockForLook() {
+    if (currentView !== "look") return;
+    if (!("wakeLock" in navigator)) return;
+    if (wakeLock) return;
+    navigator.wakeLock.request("screen").then(function (lock) {
+      wakeLock = lock;
+      wakeLock.addEventListener("release", function () {
+        wakeLock = null;
+      });
+    }).catch(function () {});
+  }
+
+  function releaseWakeLock() {
+    if (wakeLock) {
+      wakeLock.release().catch(function () {});
+      wakeLock = null;
+    }
+  }
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible" && currentView === "look") {
+      ensureWakeLockForLook();
+    }
+  });
+
+  ensureWakeLockForLook();
 
   /* ======================================================
      SERVICE WORKER

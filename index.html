@@ -901,10 +901,31 @@
     return other === "warm" ? "A neutral meeting warm" : "A neutral meeting cool";
   }
 
+  /*
+   * Fixed 15/40 luminance thresholds skewed nearly 70% of random pairs into
+   * "strong separation" — this list runs from ~10 (Pitch) to ~253 (Snow) with
+   * more very-dark/very-light shades than mid-toned ones. Thresholds are
+   * instead derived from the actual pairwise distribution across the current
+   * shade list, so the three brightness categories stay roughly equally likely.
+   */
+  var BRIGHTNESS_THRESHOLDS = (function () {
+    var diffs = [];
+    for (var i = 0; i < ALL_SHADES.length; i++) {
+      for (var j = i + 1; j < ALL_SHADES.length; j++) {
+        diffs.push(Math.abs(perceivedLuminance(ALL_SHADES[i].hex) - perceivedLuminance(ALL_SHADES[j].hex)));
+      }
+    }
+    diffs.sort(function (a, b) { return a - b; });
+    return {
+      low: diffs[Math.floor(diffs.length / 3)],
+      high: diffs[Math.floor(diffs.length * 2 / 3)]
+    };
+  })();
+
   function brightnessStatement(hexA, hexB) {
     var diff = Math.abs(perceivedLuminance(hexA) - perceivedLuminance(hexB));
-    if (diff < 15) return "Very close in brightness — watch for the edge to soften";
-    if (diff <= 40) return "Some separation — a little depth between them";
+    if (diff < BRIGHTNESS_THRESHOLDS.low) return "Very close in brightness — watch for the edge to soften";
+    if (diff <= BRIGHTNESS_THRESHOLDS.high) return "Some separation — a little depth between them";
     return "Strong separation — real depth, no ambiguity";
   }
 

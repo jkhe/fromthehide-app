@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+<title>from.the.hide</title>
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="from.the.hide">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0e0e0e">
+
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+<style>
+  :root {
+    color-scheme: dark;
+  }
+
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #0e0e0e;
+    overscroll-behavior: none;
+  }
+
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #999;
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+  }
+
+  #app {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    background: #0e0e0e;
+  }
+
+  /* ---------- Header ---------- */
+  .app-header {
+    flex: 0 0 auto;
+    padding-top: calc(env(safe-area-inset-top, 0px) + 14px);
+    padding-bottom: 10px;
+    text-align: center;
+  }
+
+  .app-header span {
+    font-size: 8px;
+    letter-spacing: 4px;
+    color: #2a2a2a;
+    text-transform: lowercase;
+  }
+
+  /* ---------- Views ---------- */
+  .views {
+    flex: 1 1 auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .view {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease;
+  }
+
+  .view.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ---------- Bottom nav ---------- */
+  .bottom-nav {
+    flex: 0 0 auto;
+    display: flex;
+    background: #131313;
+    border-top: 1px solid #1e1e1e;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .nav-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 16px 0 14px;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #444;
+    transition: color 0.2s ease;
+  }
+
+  .nav-btn.active {
+    color: #ccc;
+  }
+
+  /* ================= LOOK TAB ================= */
+  #view-look {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 28px;
+    text-align: center;
+    min-height: 100%;
+  }
+
+  .look-category {
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: #333;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .look-prompt {
+    font-size: 24px;
+    line-height: 1.65;
+    color: #999;
+    max-width: 560px;
+    font-weight: 300;
+  }
+
+  .look-next-wrap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 24px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .look-next {
+    background: none;
+    border: none;
+    color: #444;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 3px;
+    padding: 14px 22px;
+    text-transform: lowercase;
+  }
+
+  .look-next:active {
+    color: #888;
+  }
+
+  #view-look {
+    position: relative;
+  }
+
+  /* ================= COLOUR TAB ================= */
+  #view-colour {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .colour-subnav {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 24px;
+    padding: 16px 20px 14px;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  .subnav-btn {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #444;
+    padding: 4px 0;
+  }
+
+  .subnav-btn.active {
+    color: #bbb;
+    border-bottom: 1px solid #555;
+  }
+
+  .colour-subview {
+    display: none;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .colour-subview.active {
+    display: block;
+  }
+
+  /* --- Shades --- */
+  .search-wrap {
+    padding: 14px 20px 4px;
+  }
+
+  #swatch-search {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    color: #999;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 12px;
+    border-radius: 3px;
+    outline: none;
+  }
+
+  #swatch-search::placeholder {
+    color: #555;
+  }
+
+  .family-group {
+    padding: 18px 20px 4px;
+  }
+
+  .family-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: #444;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 6px;
+  }
+
+  .swatch {
+    width: 100%;
+    height: 72px;
+    border-radius: 2px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 5px 6px;
+    border: none;
+    font-family: inherit;
+  }
+
+  .swatch span {
+    font-size: 8px;
+    line-height: 1.3;
+  }
+
+  .swatch-bottom-spacer {
+    height: 24px;
+  }
+
+  /* full screen swatch view */
+  .swatch-full {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .swatch-full.active {
+    display: flex;
+  }
+
+  .swatch-full-name {
+    font-size: 28px;
+    letter-spacing: 1px;
+    font-weight: 300;
+  }
+
+  .swatch-full-hex {
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-top: 10px;
+    opacity: 0.6;
+  }
+
+  /* --- Pairings --- */
+  .pairings-list {
+    padding: 16px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .pairing-card {
+    margin-bottom: 30px;
+  }
+
+  .pairing-blocks {
+    display: flex;
+    height: 60px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .pairing-block {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pairing-block span {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 0 8px;
+  }
+
+  .pairing-desc {
+    font-size: 12px;
+    line-height: 1.75;
+    color: #444;
+    margin-top: 12px;
+  }
+
+  /* ================= LENS TAB ================= */
+  #view-lens {
+    padding: 20px 18px calc(24px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .lens-card {
+    background: #141414;
+    border: 1px solid #1e1e1e;
+    border-radius: 3px;
+    padding: 20px 18px;
+    margin-bottom: 14px;
+  }
+
+  .lens-name {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 12px;
+  }
+
+  .lens-desc {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #555;
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <header class="app-header"><span>from.the.hide</span></header>
+
+  <div class="views">
+
+    <!-- ============ LOOK ============ -->
+    <section id="view-look" class="view active">
+      <div class="look-category" id="look-category">SHADE</div>
+      <div class="look-prompt" id="look-prompt">Find where Amber has decided to stay after the light has moved on</div>
+      <div class="look-next-wrap">
+        <button class="look-next" id="look-next-btn">next &rarr;</button>
+      </div>
+    </section>
+
+    <!-- ============ COLOUR ============ -->
+    <section id="view-colour" class="view">
+      <nav class="colour-subnav">
+        <button class="subnav-btn active" data-subview="shades">SHADES</button>
+        <button class="subnav-btn" data-subview="pairings">PAIRINGS</button>
+      </nav>
+
+      <div id="subview-shades" class="colour-subview active">
+        <div class="search-wrap">
+          <input type="text" id="swatch-search" placeholder="search colours" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        </div>
+        <div id="swatch-groups"></div>
+        <div class="swatch-bottom-spacer"></div>
+      </div>
+
+      <div id="subview-pairings" class="colour-subview">
+        <div class="pairings-list" id="pairings-list"></div>
+      </div>
+    </section>
+
+    <!-- ============ LENS ============ -->
+    <section id="view-lens" class="view">
+      <div id="lens-list"></div>
+    </section>
+
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-view="look">LOOK</button>
+    <button class="nav-btn" data-view="colour">COLOUR</button>
+    <button class="nav-btn" data-view="lens">LENS</button>
+  </nav>
+
+</div>
+
+<div class="swatch-full" id="swatch-full">
+  <div class="swatch-full-name" id="swatch-full-name"></div>
+  <div class="swatch-full-hex" id="swatch-full-hex"></div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ======================================================
+     DATA
+     ====================================================== */
+
+  var PROMPTS = {
+    SHADE: [
+      "Find where Amber has decided to stay after the light has moved on",
+      "Look for Rust — not the object, the decision the surface made about time",
+      "Haze is doing something to every colour it touches. What?",
+      "Find a Midnight that contains blue rather than simply being dark",
+      "Where has Ochre survived something?",
+      "Ghost is present. Find where",
+      "Find Oxblood. It will be quieter than you expect",
+      "Where is Smoke accumulating without a fire?",
+      "Find Melon. Look for what gave up trying",
+      "Find Copper that has been earning its colour for years"
+    ],
+    RHYTHM: [
+      "You are moving faster than everything interesting. Slow down until something catches you",
+      "Find where two tempos are arguing over the same surface",
+      "Stand between the slowest rhythm and the fastest",
+      "Find what is still while everything around it moves",
+      "Find the moment something broke from its pattern and hasn't recovered",
+      "The city is breathing at a frequency you're not tuned to yet. Listen before you raise the camera",
+      "Walk at the pace of the slowest thing you can see"
+    ],
+    OPTICAL: [
+      "Find two colours at the same brightness. Watch what happens to the edge between them",
+      "The grey around you is amplifying something. What?",
+      "Find a colour that makes the colour next to it more vivid than it would be alone",
+      "Find a colour that has lost its saturation but kept its character",
+      "Two colours are erasing the distance between them. Find where",
+      "Find where temperature changes colour"
+    ],
+    GESTURE: [
+      "You are not hunting. You are waiting",
+      "Set the trap before you know what you're trapping",
+      "The image exists already. You are finding it",
+      "Stop. Wait to be interested rather than deciding to be interested",
+      "The decisive moment is not an event. It is a quality of attention arriving",
+      "You are the hide, not the hunter. Stay still",
+      "Something is moving through a colour field. Don't freeze it"
+    ],
+    SURFACE: [
+      "Find a surface that remembers something you cannot see",
+      "Find the oldest surface in your current frame",
+      "Find where repetition has left a mark",
+      "Find what nearby has absorbed decades of something",
+      "Find what has become invisible through being ordinary",
+      "What has time worked on longest in what you can see?",
+      "Photograph the absence of something that was here recently"
+    ],
+    SEEING: [
+      "Everyone here is looking at the same thing. Don't",
+      "What can you see without turning your head?",
+      "You are inside the colour field, not looking at it. What does that change?",
+      "Find the veil",
+      "Stand back until the foreground and background share the same plane. How far is that?",
+      "Find a colour decision someone made",
+      "The image already exists in the light. Find it",
+      "You are looking at a surface. Look through it",
+      "Find the surface that separates an interior light from an exterior one. Stand at it"
+    ],
+    LIGHT: [
+      "You are not shooting the subject. You are shooting what the light is doing to the subject",
+      "Turn around. The interesting light is probably behind you",
+      "Find where two different light sources are arguing over the same surface",
+      "The shadow is the subject, not what's casting it",
+      "Shoot into the light. Wait",
+      "The overcast is doing something specific today. What colour is it making everything?",
+      "Listen before you look. What you can hear but not see — find its edge"
+    ]
+  };
+
+  var CATEGORY_KEYS = Object.keys(PROMPTS);
+
+  var FAMILIES = [
+    { name: "Blue", colours: [
+      ["Peacock", "#006B8F"], ["Sky", "#87CEEB"], ["Cyan", "#00B4D8"], ["Electric", "#0047AB"],
+      ["Cobalt", "#1A4B8C"], ["Swimming Pool", "#4FC3F7"], ["Robin's Egg", "#96C8D8"], ["Denim", "#5B7FA6"],
+      ["Baby", "#AED9E0"], ["Ultramarine", "#3F00FF"], ["Navy", "#001F5B"], ["Sapphire", "#0F52BA"],
+      ["Pale", "#C8DCF0"], ["Powder", "#B0C4DE"], ["Midnight", "#0D1B2A"]
+    ]},
+    { name: "Black", colours: [
+      ["Ink", "#1C1C2E"], ["Pitch", "#0A0A0A"], ["Licorice", "#1A0B00"], ["Obsidian", "#1B1B1B"],
+      ["Asphalt", "#2C2C2C"], ["Ebony", "#0F0F0F"], ["Jet", "#141414"], ["Raven", "#0D0D0D"],
+      ["Matte", "#1A1A1A"]
+    ]},
+    { name: "Pink", colours: [
+      ["Blush", "#F5C6C6"], ["Hot", "#FF69B4"], ["Puce", "#CC8899"], ["Bubblegum", "#FF85A2"],
+      ["Amaranth", "#E52B50"], ["Coral", "#FF6B6B"], ["Cherry Blossom", "#FFB7C5"], ["Salmon", "#FA8072"],
+      ["Flamingo", "#F4A7A3"], ["Rose", "#D4667A"]
+    ]},
+    { name: "Gray", colours: [
+      ["Smoke", "#A9A9A9"], ["Charcoal", "#3D3D3D"], ["Ash", "#B2BEB5"], ["Haze", "#D4D8DD"],
+      ["Iron", "#48494B"], ["Slate", "#708090"], ["Silver", "#C0C0C0"], ["Taupe", "#8B8680"]
+    ]},
+    { name: "White", colours: [
+      ["Alabaster", "#F2F0EB"], ["Cream", "#FFFDD0"], ["Linen", "#FAF0E6"], ["Ivory", "#FFFFF0"],
+      ["Ghost", "#F8F8FF"], ["Pearl", "#F0EAD6"], ["Lily", "#F7F7F7"], ["Cloud", "#F4F4F4"],
+      ["Bone", "#E8DCC8"], ["Snow", "#FFFAFA"]
+    ]},
+    { name: "Purple", colours: [
+      ["Royal", "#7851A9"], ["Lavender", "#B57EDC"], ["Plum", "#8E4585"], ["Orchid", "#DA70D6"],
+      ["Mauve", "#C8A2C8"], ["Amethyst", "#9966CC"], ["Lilac", "#C8A2C8"], ["Magenta", "#CC00CC"],
+      ["Violet", "#7F00FF"], ["Wine", "#722F37"]
+    ]},
+    { name: "Red", colours: [
+      ["Scarlet", "#FF2400"], ["Raspberry", "#C0224D"], ["Crimson", "#DC143C"], ["Ruby", "#9B111E"],
+      ["Vermilion", "#E34234"], ["Oxblood", "#4A0000"], ["Burgundy", "#800020"], ["Maroon", "#800000"],
+      ["Auburn", "#A52A2A"]
+    ]},
+    { name: "Yellow", colours: [
+      ["Lemon", "#FFF44F"], ["Goldenrod", "#DAA520"], ["Blonde", "#FAF0BE"], ["Canary", "#FFEF00"],
+      ["Gold", "#FFD700"], ["Butter", "#FFFAA0"], ["Citrine", "#E4D00A"], ["Piss", "#C9A227"]
+    ]},
+    { name: "Orange", colours: [
+      ["Peach", "#FFCBA4"], ["Poppy", "#E95239"], ["Carrot", "#ED9121"], ["Tangerine", "#F28500"],
+      ["Melon", "#FDB99B"], ["Honey", "#FFC30B"], ["Tiger", "#FC6A03"], ["Amber", "#FFBF00"],
+      ["Pumpkin", "#FF7518"], ["Harvest Gold", "#DA9100"], ["Rust", "#B7410E"]
+    ]},
+    { name: "Brown", colours: [
+      ["Beige", "#F5F5DC"], ["Chocolate", "#3D1C02"], ["Sand", "#C2B280"], ["Russet", "#80461B"],
+      ["Dirt", "#9B7653"], ["Copper", "#B87333"], ["Ochre", "#CC7722"], ["Golden", "#A67C52"],
+      ["Bronze", "#CD7F32"], ["Cinnamon", "#D2691E"]
+    ]},
+    { name: "Green", colours: [
+      ["Jungle", "#1A7A4A"], ["Seafoam", "#9FE2BF"], ["Mint", "#98FF98"], ["Turquoise", "#40E0D0"],
+      ["Teal", "#008080"], ["Grass", "#5A8A3C"], ["Avocado", "#568203"], ["Chartreuse", "#7FFF00"],
+      ["Emerald", "#50C878"], ["Poison", "#4CAF50"], ["Sage", "#8FAE8B"], ["Jade", "#00A86B"]
+    ]}
+  ];
+
+  var PAIRINGS = [
+    { a: ["Amber", "#FFBF00"], b: ["Midnight", "#0D1B2A"], desc: "Amber is warmth stored and retrieved. Midnight contains blue depth, not simply darkness. At this combination, colour concentrates rather than retreats. Motion through Amber against a Midnight field at slow shutter produces a new colour at the trail's edge — neither, and both." },
+    { a: ["Rust", "#B7410E"], b: ["Haze", "#D4D8DD"], desc: "Rust is what happens when orange commits fully to being iron. Haze is London's specific morning indecision — not cloud, not clearing. The pairing describes two different processes of time rather than two colours placed together deliberately." },
+    { a: ["Oxblood", "#4A0000"], b: ["Ebony", "#0F0F0F"], desc: "Two colours so close in brightness that their shared boundary begins to dissolve. Oxblood is red with the warmth nearly pressed out. At the intersection the eye loses its orientation — it cannot determine which surface is in front. A quiet effect. Most people won't notice." },
+    { a: ["Ghost", "#F8F8FF"], b: ["Vermilion", "#E34234"], desc: "Ghost is not white — it retains the suggestion of temperature while committing to none. Vermilion against it does not shout: it arrives. The Ghost performs active work, amplifying the Vermilion toward maximum visibility. One colour asking another to be more fully itself." },
+    { a: ["Piss", "#C9A227"], b: ["Cobalt", "#1A4B8C"], desc: "Berardini names this without apology. Two colours that exist purely for functional visibility, neither choosing the other as a partner. Find them occupying the same surface and the image documents an encounter between two systems that weren't designed to meet." },
+    { a: ["Salmon", "#FA8072"], b: ["Teal", "#008080"], desc: "Two colours that couldn't commit to their nearest primary. Together they describe the colour decision made by someone who needed to be seen but not too much. The surface remembers the decision long after the reason has gone." },
+    { a: ["Plum", "#8E4585"], b: ["Ink", "#1C1C2E"], desc: "The shadow end of the histogram — territory most photographers abandon. Plum holds warmth even as it approaches black; Ink has none. The gap between them is smaller than any chart suggests. Something is happening here that requires a surface rather than a subject." },
+    { a: ["Melon", "#FDB99B"], b: ["Denim", "#5B7FA6"], desc: "Melon was once more vivid and has softened into a warmth that no longer demands anything. Denim is the democratisation of blue. Together they produce a visual quiet: nothing is happening, and that is the content." },
+    { a: ["Honey", "#FFC30B"], b: ["Slate", "#708090"], desc: "Not morning or evening but the transition between — warmth present but not committed to a direction. At this tonal proximity the warm/cool spatial dynamic reverses and becomes genuinely ambiguous: which is advancing, which receding?" },
+    { a: ["Coral", "#FF6B6B"], b: ["Jade", "#00A86B"], desc: "In flat diffused light these two colours can sit at equal brightness, and when they do their shared boundary softens. They press together into a single surface. The image stops being about two things. This is the condition Albers called the most rare. It cannot be manufactured." },
+    { a: ["Goldenrod", "#DAA520"], b: ["Charcoal", "#3D3D3D"], desc: "Goldenrod is not a colour anyone specifies — it's a colour surfaces arrive at after years of weather working on something that was once differently yellow. Against Charcoal, the specific dirty warmth becomes more itself." },
+    { a: ["Chocolate", "#3D1C02"], b: ["Powder", "#B0C4DE"], desc: "Chocolate retains heat even as it approaches black. Powder is diffused light that hasn't found a surface to land on properly. Together they describe the full range of a particular interior condition: old material in shadow and new air around it." },
+    { a: ["Copper", "#B87333"], b: ["Lavender", "#B57EDC"], desc: "An unlikely encounter that occurs in specific conditions: warm late light catching a metallic surface and throwing a reflection onto a cooler adjacent shadow. A colour correspondence that nobody designed and that lasts a few minutes." },
+    { a: ["Burgundy", "#800020"], b: ["Smoke", "#A9A9A9"], desc: "Two colours with residue in them — both are what something becomes after duration has worked on it. Together they describe an enclosed hour — not dramatic, not picturesque, but particular in the way that only duration produces." },
+    { a: ["Ochre", "#CC7722"], b: ["Cobalt", "#1A4B8C"], desc: "Ochre is one of the oldest pigments — immediate and ancient simultaneously. Cobalt arrived late, required chemistry. Together they describe a collision between different kinds of time, finding themselves sharing a frame because the city placed them there without consultation." }
+  ];
+
+  var LENSES = [
+    { name: "Ricoh 28mm", desc: "Immersive. You are inside the rhythm of the street, not observing it. The world comes to you at full density. Everything is present simultaneously. Use when you want to disappear." },
+    { name: "Sigma 45mm", desc: "The world as it presents itself. Neither wide nor compressed. No particular agenda. The most honest focal length — it doesn't impose a way of seeing. Use when you don't know what you're looking for." },
+    { name: "Zeiss Sonnar 50mm", desc: "Character and warmth at the cost of certainty. Wide open it renders softly, commits to the present moment over precision. Manual focus at this length demands a different pace. Use when you want to be in the image rather than at it." },
+    { name: "Sigma 90mm", desc: "The beginning of selection. You are choosing what to compress, what to exclude. The world starts to flatten. Subjects separate from their contexts. Use when you know what you're looking for but not where it is." },
+    { name: "Elmarit-R 135mm", desc: "Compression and surfaces. Distance closes. The far becomes adjacent to the near. Colour fields flatten. You are a long way from your subject and that distance is the image. Use when you want to see the city as colour rather than as place." },
+    { name: "Elmarit-R 180mm", desc: "Abstraction. The subject is no longer a subject — it is texture, field, fragment. You need space and patience. The world at this length is a different world. Use when you want to stop recognising things." }
+  ];
+
+  /* ======================================================
+     HELPERS
+     ====================================================== */
+
+  function hexToRgb(hex) {
+    var h = hex.replace("#", "");
+    return {
+      r: parseInt(h.substring(0, 2), 16),
+      g: parseInt(h.substring(2, 4), 16),
+      b: parseInt(h.substring(4, 6), 16)
+    };
+  }
+
+  function relLuminance(hex) {
+    var c = hexToRgb(hex);
+    function lin(v) {
+      v = v / 255;
+      return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+    }
+    return 0.2126 * lin(c.r) + 0.7152 * lin(c.g) + 0.0722 * lin(c.b);
+  }
+
+  function labelColour(hex) {
+    return relLuminance(hex) > 0.45 ? "#111" : "#eee";
+  }
+
+  /* ======================================================
+     LOOK TAB
+     ====================================================== */
+
+  var lookCategoryEl = document.getElementById("look-category");
+  var lookPromptEl = document.getElementById("look-prompt");
+  var lookNextBtn = document.getElementById("look-next-btn");
+  var lastLook = null;
+
+  function nextLook() {
+    var cat = CATEGORY_KEYS[Math.floor(Math.random() * CATEGORY_KEYS.length)];
+    var list = PROMPTS[cat];
+    var prompt = list[Math.floor(Math.random() * list.length)];
+    var key = cat + "|" + prompt;
+    if (key === lastLook && (list.length > 1 || CATEGORY_KEYS.length > 1)) {
+      nextLook();
+      return;
+    }
+    lastLook = key;
+    lookCategoryEl.textContent = cat;
+    lookPromptEl.textContent = prompt;
+  }
+
+  lookNextBtn.addEventListener("click", nextLook);
+
+  /* ======================================================
+     COLOUR TAB — SHADES
+     ====================================================== */
+
+  var swatchGroupsEl = document.getElementById("swatch-groups");
+  var swatchSearchEl = document.getElementById("swatch-search");
+  var swatchFullEl = document.getElementById("swatch-full");
+  var swatchFullNameEl = document.getElementById("swatch-full-name");
+  var swatchFullHexEl = document.getElementById("swatch-full-hex");
+
+  function renderSwatches(filter) {
+    filter = (filter || "").trim().toLowerCase();
+    swatchGroupsEl.innerHTML = "";
+
+    FAMILIES.forEach(function (family) {
+      var matches = family.colours.filter(function (c) {
+        return !filter || c[0].toLowerCase().indexOf(filter) !== -1;
+      });
+      if (matches.length === 0) return;
+
+      var groupEl = document.createElement("div");
+      groupEl.className = "family-group";
+
+      var labelEl = document.createElement("div");
+      labelEl.className = "family-label";
+      labelEl.textContent = family.name;
+      groupEl.appendChild(labelEl);
+
+      var gridEl = document.createElement("div");
+      gridEl.className = "swatch-grid";
+
+      matches.forEach(function (c) {
+        var name = c[0], hex = c[1];
+        var sw = document.createElement("button");
+        sw.className = "swatch";
+        sw.style.background = hex;
+        var labelColourVal = labelColour(hex);
+        sw.innerHTML = '<span style="color:' + labelColourVal + '">' + name + "</span>";
+        sw.addEventListener("click", function () {
+          openFullSwatch(name, hex);
+        });
+        gridEl.appendChild(sw);
+      });
+
+      groupEl.appendChild(gridEl);
+      swatchGroupsEl.appendChild(groupEl);
+    });
+  }
+
+  function openFullSwatch(name, hex) {
+    swatchFullEl.style.background = hex;
+    var textColour = labelColour(hex);
+    swatchFullNameEl.style.color = textColour;
+    swatchFullHexEl.style.color = textColour;
+    swatchFullNameEl.textContent = name;
+    swatchFullHexEl.textContent = hex.toUpperCase();
+    swatchFullEl.classList.add("active");
+  }
+
+  swatchFullEl.addEventListener("click", function () {
+    swatchFullEl.classList.remove("active");
+  });
+
+  swatchSearchEl.addEventListener("input", function () {
+    renderSwatches(swatchSearchEl.value);
+  });
+
+  renderSwatches("");
+
+  /* ======================================================
+     COLOUR TAB — PAIRINGS
+     ====================================================== */
+
+  var pairingsListEl = document.getElementById("pairings-list");
+
+  function renderPairings() {
+    pairingsListEl.innerHTML = "";
+    PAIRINGS.forEach(function (p) {
+      var card = document.createElement("div");
+      card.className = "pairing-card";
+
+      var blocks = document.createElement("div");
+      blocks.className = "pairing-blocks";
+
+      [p.a, p.b].forEach(function (item) {
+        var block = document.createElement("div");
+        block.className = "pairing-block";
+        block.style.background = item[1];
+        var span = document.createElement("span");
+        span.style.color = labelColour(item[1]);
+        span.textContent = item[0];
+        block.appendChild(span);
+        blocks.appendChild(block);
+      });
+
+      var desc = document.createElement("div");
+      desc.className = "pairing-desc";
+      desc.textContent = p.desc;
+
+      card.appendChild(blocks);
+      card.appendChild(desc);
+      pairingsListEl.appendChild(card);
+    });
+  }
+
+  renderPairings();
+
+  /* ======================================================
+     COLOUR TAB — sub-nav switching
+     ====================================================== */
+
+  var subnavBtns = document.querySelectorAll(".subnav-btn");
+  var subviews = {
+    shades: document.getElementById("subview-shades"),
+    pairings: document.getElementById("subview-pairings")
+  };
+
+  subnavBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      subnavBtns.forEach(function (b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+      Object.keys(subviews).forEach(function (key) {
+        subviews[key].classList.toggle("active", key === btn.dataset.subview);
+      });
+    });
+  });
+
+  /* ======================================================
+     LENS TAB
+     ====================================================== */
+
+  var lensListEl = document.getElementById("lens-list");
+
+  function renderLenses() {
+    lensListEl.innerHTML = "";
+    LENSES.forEach(function (lens) {
+      var card = document.createElement("div");
+      card.className = "lens-card";
+
+      var name = document.createElement("div");
+      name.className = "lens-name";
+      name.textContent = lens.name;
+
+      var desc = document.createElement("div");
+      desc.className = "lens-desc";
+      desc.textContent = lens.desc;
+
+      card.appendChild(name);
+      card.appendChild(desc);
+      lensListEl.appendChild(card);
+    });
+  }
+
+  renderLenses();
+
+  /* ======================================================
+     BOTTOM NAV — tab switching
+     ====================================================== */
+
+  var navBtns = document.querySelectorAll(".nav-btn");
+  var views = {
+    look: document.getElementById("view-look"),
+    colour: document.getElementById("view-colour"),
+    lens: document.getElementById("view-lens")
+  };
+
+  navBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      navBtns.forEach(function (b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+      Object.keys(views).forEach(function (key) {
+        views[key].classList.toggle("active", key === btn.dataset.view);
+      });
+    });
+  });
+
+  /* ======================================================
+     SERVICE WORKER
+     ====================================================== */
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+  }
+
+})();
+</script>
+
+</body>
+</html>

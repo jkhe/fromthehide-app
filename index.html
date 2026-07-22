@@ -303,10 +303,6 @@
   }
 
   /* --- Pairings --- */
-  .pairings-list {
-    padding: 16px 20px calc(20px + env(safe-area-inset-bottom, 0px));
-  }
-
   .pairing-card {
     margin-bottom: 30px;
   }
@@ -339,6 +335,90 @@
     margin-top: 12px;
   }
 
+  .pairing-desc div + div {
+    margin-top: 6px;
+  }
+
+  /* --- Colour of the day --- */
+  .cotd-wrap {
+    padding: 16px 20px 4px;
+  }
+
+  .cotd-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: #333;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .cotd-swatch {
+    width: 100%;
+    height: 120px;
+    border: none;
+    border-radius: 2px;
+    display: flex;
+    align-items: flex-end;
+    padding: 12px 14px;
+    font-family: inherit;
+  }
+
+  .cotd-name {
+    font-size: 20px;
+    font-weight: 300;
+  }
+
+  /* --- Pairing generator --- */
+  .pairing-generator {
+    padding: 16px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .new-pairing-btn {
+    background: none;
+    border: 1px solid #2a2a2a;
+    color: #777;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 3px;
+    padding: 12px 0;
+    width: 100%;
+    border-radius: 3px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+
+  .new-pairing-btn:active {
+    color: #aaa;
+  }
+
+  .save-pairing-btn {
+    background: none;
+    border: 1px solid #333;
+    color: #666;
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: 2px;
+    padding: 10px 16px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    margin-top: 16px;
+  }
+
+  .save-pairing-btn:active {
+    color: #999;
+  }
+
+  .save-pairing-btn:disabled {
+    opacity: 0.4;
+  }
+
+  /* --- Shade link inside LOOK prompts --- */
+  .shade-link {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    color: #bbb;
+  }
+
   /* ================= LENS TAB ================= */
   #view-lens {
     padding: 20px 18px calc(24px + env(safe-area-inset-bottom, 0px));
@@ -365,6 +445,141 @@
     line-height: 1.8;
     color: #555;
   }
+
+  /* ================= LOG TAB ================= */
+  .log-input-row {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  .log-shade-wrap {
+    position: relative;
+  }
+
+  #log-shade-input,
+  #log-note-input {
+    width: 100%;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    color: #999;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 10px 12px;
+    border-radius: 3px;
+    outline: none;
+  }
+
+  #log-shade-input::placeholder,
+  #log-note-input::placeholder {
+    color: #555;
+  }
+
+  .log-suggestions {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 2px);
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 3px;
+    z-index: 10;
+    max-height: 180px;
+    overflow-y: auto;
+    display: none;
+  }
+
+  .log-suggestions.active {
+    display: block;
+  }
+
+  .log-suggestion-item {
+    padding: 9px 12px;
+    font-size: 13px;
+    color: #999;
+  }
+
+  .log-suggestion-item:active {
+    background: #2a2a2a;
+  }
+
+  .log-add-btn {
+    background: none;
+    border: 1px solid #333;
+    color: #888;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 11px 0;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+
+  .log-add-btn:active {
+    color: #ccc;
+  }
+
+  .log-list {
+    padding: 4px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .log-entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  .log-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    flex: 0 0 auto;
+  }
+
+  .log-entry-main {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .log-entry-shade {
+    font-size: 13px;
+    color: #bbb;
+  }
+
+  .log-entry-note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 2px;
+  }
+
+  .log-entry-date {
+    font-size: 10px;
+    color: #444;
+    flex: 0 0 auto;
+    margin-left: 4px;
+  }
+
+  .log-delete-btn {
+    background: none;
+    border: none;
+    color: #444;
+    font-size: 16px;
+    line-height: 1;
+    padding: 4px 2px 4px 10px;
+    flex: 0 0 auto;
+  }
+
+  .log-empty {
+    font-size: 12px;
+    color: #444;
+    text-align: center;
+    padding: 60px 20px;
+  }
 </style>
 </head>
 <body>
@@ -387,6 +602,13 @@
 
     <!-- ============ COLOUR ============ -->
     <section id="view-colour" class="view">
+      <div class="cotd-wrap">
+        <div class="cotd-label">TODAY'S SHADE</div>
+        <button class="cotd-swatch" id="cotd-swatch">
+          <span class="cotd-name" id="cotd-name"></span>
+        </button>
+      </div>
+
       <nav class="colour-subnav">
         <button class="subnav-btn active" data-subview="shades">SHADES</button>
         <button class="subnav-btn" data-subview="pairings">PAIRINGS</button>
@@ -401,7 +623,10 @@
       </div>
 
       <div id="subview-pairings" class="colour-subview">
-        <div class="pairings-list" id="pairings-list"></div>
+        <div class="pairing-generator">
+          <button class="new-pairing-btn" id="new-pairing-btn">NEW PAIRING</button>
+          <div id="pairing-result"></div>
+        </div>
       </div>
     </section>
 
@@ -410,12 +635,26 @@
       <div id="lens-list"></div>
     </section>
 
+    <!-- ============ LOG ============ -->
+    <section id="view-log" class="view">
+      <div class="log-input-row">
+        <div class="log-shade-wrap">
+          <input type="text" id="log-shade-input" placeholder="shade" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <div class="log-suggestions" id="log-suggestions"></div>
+        </div>
+        <input type="text" id="log-note-input" placeholder="where / what" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <button class="log-add-btn" id="log-add-btn">ADD</button>
+      </div>
+      <div class="log-list" id="log-list"></div>
+    </section>
+
   </div>
 
   <nav class="bottom-nav">
     <button class="nav-btn active" data-view="look">LOOK</button>
     <button class="nav-btn" data-view="colour">COLOUR</button>
     <button class="nav-btn" data-view="lens">LENS</button>
+    <button class="nav-btn" data-view="log">LOG</button>
   </nav>
 
 </div>
@@ -562,23 +801,30 @@
     ]}
   ];
 
-  var PAIRINGS = [
-    { a: ["Amber", "#FFBF00"], b: ["Midnight", "#0D1B2A"], desc: "Amber is warmth stored and retrieved. Midnight contains blue depth, not simply darkness. At this combination, colour concentrates rather than retreats. Motion through Amber against a Midnight field at slow shutter produces a new colour at the trail's edge — neither, and both." },
-    { a: ["Rust", "#B7410E"], b: ["Haze", "#D4D8DD"], desc: "Rust is what happens when orange commits fully to being iron. Haze is London's specific morning indecision — not cloud, not clearing. The pairing describes two different processes of time rather than two colours placed together deliberately." },
-    { a: ["Oxblood", "#4A0000"], b: ["Ebony", "#0F0F0F"], desc: "Two colours so close in brightness that their shared boundary begins to dissolve. Oxblood is red with the warmth nearly pressed out. At the intersection the eye loses its orientation — it cannot determine which surface is in front. A quiet effect. Most people won't notice." },
-    { a: ["Ghost", "#F8F8FF"], b: ["Vermilion", "#E34234"], desc: "Ghost is not white — it retains the suggestion of temperature while committing to none. Vermilion against it does not shout: it arrives. The Ghost performs active work, amplifying the Vermilion toward maximum visibility. One colour asking another to be more fully itself." },
-    { a: ["Piss", "#C9A227"], b: ["Cobalt", "#1A4B8C"], desc: "Berardini names this without apology. Two colours that exist purely for functional visibility, neither choosing the other as a partner. Find them occupying the same surface and the image documents an encounter between two systems that weren't designed to meet." },
-    { a: ["Salmon", "#FA8072"], b: ["Teal", "#008080"], desc: "Two colours that couldn't commit to their nearest primary. Together they describe the colour decision made by someone who needed to be seen but not too much. The surface remembers the decision long after the reason has gone." },
-    { a: ["Plum", "#8E4585"], b: ["Ink", "#1C1C2E"], desc: "The shadow end of the histogram — territory most photographers abandon. Plum holds warmth even as it approaches black; Ink has none. The gap between them is smaller than any chart suggests. Something is happening here that requires a surface rather than a subject." },
-    { a: ["Melon", "#FDB99B"], b: ["Denim", "#5B7FA6"], desc: "Melon was once more vivid and has softened into a warmth that no longer demands anything. Denim is the democratisation of blue. Together they produce a visual quiet: nothing is happening, and that is the content." },
-    { a: ["Honey", "#FFC30B"], b: ["Slate", "#708090"], desc: "Not morning or evening but the transition between — warmth present but not committed to a direction. At this tonal proximity the warm/cool spatial dynamic reverses and becomes genuinely ambiguous: which is advancing, which receding?" },
-    { a: ["Coral", "#FF6B6B"], b: ["Jade", "#00A86B"], desc: "In flat diffused light these two colours can sit at equal brightness, and when they do their shared boundary softens. They press together into a single surface. The image stops being about two things. This is the condition Albers called the most rare. It cannot be manufactured." },
-    { a: ["Goldenrod", "#DAA520"], b: ["Charcoal", "#3D3D3D"], desc: "Goldenrod is not a colour anyone specifies — it's a colour surfaces arrive at after years of weather working on something that was once differently yellow. Against Charcoal, the specific dirty warmth becomes more itself." },
-    { a: ["Chocolate", "#3D1C02"], b: ["Powder", "#B0C4DE"], desc: "Chocolate retains heat even as it approaches black. Powder is diffused light that hasn't found a surface to land on properly. Together they describe the full range of a particular interior condition: old material in shadow and new air around it." },
-    { a: ["Copper", "#B87333"], b: ["Lavender", "#B57EDC"], desc: "An unlikely encounter that occurs in specific conditions: warm late light catching a metallic surface and throwing a reflection onto a cooler adjacent shadow. A colour correspondence that nobody designed and that lasts a few minutes." },
-    { a: ["Burgundy", "#800020"], b: ["Smoke", "#A9A9A9"], desc: "Two colours with residue in them — both are what something becomes after duration has worked on it. Together they describe an enclosed hour — not dramatic, not picturesque, but particular in the way that only duration produces." },
-    { a: ["Ochre", "#CC7722"], b: ["Cobalt", "#1A4B8C"], desc: "Ochre is one of the oldest pigments — immediate and ancient simultaneously. Cobalt arrived late, required chemistry. Together they describe a collision between different kinds of time, finding themselves sharing a frame because the city placed them there without consultation." }
-  ];
+  var ALL_SHADES = [];
+  FAMILIES.forEach(function (family) {
+    family.colours.forEach(function (c) {
+      ALL_SHADES.push({ name: c[0], hex: c[1], family: family.name });
+    });
+  });
+
+  var SHADE_BY_NAME = {};
+  ALL_SHADES.forEach(function (s) {
+    SHADE_BY_NAME[s.name] = s;
+  });
+
+  function escapeRegex(s) {
+    return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  var SHADE_NAME_REGEX = new RegExp(
+    "\\b(" + ALL_SHADES
+      .map(function (s) { return s.name; })
+      .sort(function (a, b) { return b.length - a.length; })
+      .map(escapeRegex)
+      .join("|") + ")\\b",
+    "g"
+  );
 
   var LENSES = [
     { name: "Ricoh 28mm", desc: "Immersive. You are inside the rhythm of the street, not observing it. The world comes to you at full density. Everything is present simultaneously. Use when you want to disappear." },
@@ -615,6 +861,84 @@
     return relLuminance(hex) > 0.45 ? "#111" : "#eee";
   }
 
+  function hexToHsl(hex) {
+    var c = hexToRgb(hex);
+    var r = c.r / 255, g = c.g / 255, b = c.b / 255;
+    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    var h = 0, s = 0, l = (max + min) / 2;
+    if (max !== min) {
+      var d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h *= 60;
+    }
+    return { h: h, s: s, l: l };
+  }
+
+  function tempCategory(hex) {
+    var h = hexToHsl(hex).h;
+    if (h < 60 || h >= 300) return "warm";
+    if (h >= 180 && h < 300) return "cool";
+    return "neutral";
+  }
+
+  function perceivedLuminance(hex) {
+    var c = hexToRgb(hex);
+    return 0.299 * c.r + 0.587 * c.g + 0.114 * c.b;
+  }
+
+  function temperatureStatement(hexA, hexB) {
+    var a = tempCategory(hexA), b = tempCategory(hexB);
+    if (a === "warm" && b === "warm") return "Two warms, different intensities";
+    if (a === "cool" && b === "cool") return "Two cools, different depths";
+    if ((a === "warm" && b === "cool") || (a === "cool" && b === "warm")) return "Warm meeting cool";
+    if (a === "neutral" && b === "neutral") return "Two neutrals, transitional territory";
+    var other = a === "neutral" ? b : a;
+    return other === "warm" ? "A neutral meeting warm" : "A neutral meeting cool";
+  }
+
+  function brightnessStatement(hexA, hexB) {
+    var diff = Math.abs(perceivedLuminance(hexA) - perceivedLuminance(hexB));
+    if (diff < 15) return "Very close in brightness — watch for the edge to soften";
+    if (diff <= 40) return "Some separation — a little depth between them";
+    return "Strong separation — real depth, no ambiguity";
+  }
+
+  function hashStringToInt(str) {
+    var h = 2166136261;
+    for (var i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  }
+
+  function seededRandom01(seed) {
+    var t = (seed += 0x6D2B79F5) >>> 0;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  }
+
+  function todaysDateKey() {
+    var d = new Date();
+    var m = String(d.getMonth() + 1);
+    var day = String(d.getDate());
+    if (m.length < 2) m = "0" + m;
+    if (day.length < 2) day = "0" + day;
+    return d.getFullYear() + "-" + m + "-" + day;
+  }
+
+  function colourOfTheDay() {
+    var seed = hashStringToInt(todaysDateKey());
+    var idx = Math.floor(seededRandom01(seed) * ALL_SHADES.length);
+    return ALL_SHADES[idx];
+  }
+
   /* ======================================================
      LOOK TAB
      ====================================================== */
@@ -625,6 +949,33 @@
   var lookNextBtn = document.getElementById("look-next-btn");
   var lookViewEl = document.getElementById("view-look");
   var lastLook = null;
+
+  function renderLookPrompt(cat, prompt) {
+    lookPromptEl.innerHTML = "";
+
+    if (cat !== "SHADE") {
+      lookPromptEl.textContent = prompt;
+      return;
+    }
+
+    var lastIndex = 0;
+    var match;
+    SHADE_NAME_REGEX.lastIndex = 0;
+    while ((match = SHADE_NAME_REGEX.exec(prompt)) !== null) {
+      if (match.index > lastIndex) {
+        lookPromptEl.appendChild(document.createTextNode(prompt.slice(lastIndex, match.index)));
+      }
+      var span = document.createElement("span");
+      span.className = "shade-link";
+      span.textContent = match[0];
+      span.dataset.shade = match[0];
+      lookPromptEl.appendChild(span);
+      lastIndex = match.index + match[0].length;
+    }
+    if (lastIndex < prompt.length) {
+      lookPromptEl.appendChild(document.createTextNode(prompt.slice(lastIndex)));
+    }
+  }
 
   function nextLook() {
     var cat = CATEGORY_KEYS[Math.floor(Math.random() * CATEGORY_KEYS.length)];
@@ -637,7 +988,7 @@
     }
     lastLook = key;
     lookCategoryEl.textContent = cat;
-    lookPromptEl.textContent = prompt;
+    renderLookPrompt(cat, prompt);
 
     var lens = LENSES[Math.floor(Math.random() * LENSES.length)];
     lookLensEl.textContent = lens.name;
@@ -646,6 +997,14 @@
   lookNextBtn.addEventListener("click", function () {
     nextLook();
     ensureWakeLockForLook();
+  });
+
+  lookPromptEl.addEventListener("click", function (e) {
+    var target = e.target.closest ? e.target.closest(".shade-link") : null;
+    if (!target) return;
+    var shade = SHADE_BY_NAME[target.dataset.shade];
+    if (!shade) return;
+    goToShadeInColour(shade.name, shade.hex);
   });
 
   /* swipe up anywhere on the LOOK screen shuffles too */
@@ -747,42 +1106,97 @@
   renderSwatches("");
 
   /* ======================================================
-     COLOUR TAB — PAIRINGS
+     COLOUR TAB — TODAY'S SHADE
      ====================================================== */
 
-  var pairingsListEl = document.getElementById("pairings-list");
+  var cotdSwatchEl = document.getElementById("cotd-swatch");
+  var cotdNameEl = document.getElementById("cotd-name");
+  var cotdDateKey = null;
 
-  function renderPairings() {
-    pairingsListEl.innerHTML = "";
-    PAIRINGS.forEach(function (p) {
-      var card = document.createElement("div");
-      card.className = "pairing-card";
-
-      var blocks = document.createElement("div");
-      blocks.className = "pairing-blocks";
-
-      [p.a, p.b].forEach(function (item) {
-        var block = document.createElement("div");
-        block.className = "pairing-block";
-        block.style.background = item[1];
-        var span = document.createElement("span");
-        span.style.color = labelColour(item[1]);
-        span.textContent = item[0];
-        block.appendChild(span);
-        blocks.appendChild(block);
-      });
-
-      var desc = document.createElement("div");
-      desc.className = "pairing-desc";
-      desc.textContent = p.desc;
-
-      card.appendChild(blocks);
-      card.appendChild(desc);
-      pairingsListEl.appendChild(card);
-    });
+  function renderColourOfDay() {
+    cotdDateKey = todaysDateKey();
+    var shade = colourOfTheDay();
+    cotdSwatchEl.style.background = shade.hex;
+    cotdNameEl.style.color = labelColour(shade.hex);
+    cotdNameEl.textContent = shade.name;
+    cotdSwatchEl.onclick = function () {
+      openFullSwatch(shade.name, shade.hex);
+    };
   }
 
-  renderPairings();
+  renderColourOfDay();
+
+  /* catches the date rolling over past local midnight while the app stays open */
+  setInterval(function () {
+    if (todaysDateKey() !== cotdDateKey) renderColourOfDay();
+  }, 60000);
+
+  /* ======================================================
+     COLOUR TAB — PAIRINGS (generator)
+     ====================================================== */
+
+  var newPairingBtn = document.getElementById("new-pairing-btn");
+  var pairingResultEl = document.getElementById("pairing-result");
+  var currentGeneratedPairing = null;
+
+  function generatePairing() {
+    var i = Math.floor(Math.random() * ALL_SHADES.length);
+    var j;
+    do {
+      j = Math.floor(Math.random() * ALL_SHADES.length);
+    } while (j === i);
+    currentGeneratedPairing = { a: ALL_SHADES[i], b: ALL_SHADES[j] };
+    renderGeneratedPairing();
+  }
+
+  function renderGeneratedPairing() {
+    pairingResultEl.innerHTML = "";
+    if (!currentGeneratedPairing) return;
+    var p = currentGeneratedPairing;
+
+    var card = document.createElement("div");
+    card.className = "pairing-card";
+
+    var blocks = document.createElement("div");
+    blocks.className = "pairing-blocks";
+    [p.a, p.b].forEach(function (item) {
+      var block = document.createElement("div");
+      block.className = "pairing-block";
+      block.style.background = item.hex;
+      var span = document.createElement("span");
+      span.style.color = labelColour(item.hex);
+      span.textContent = item.name;
+      block.appendChild(span);
+      blocks.appendChild(block);
+    });
+
+    var analysis = document.createElement("div");
+    analysis.className = "pairing-desc";
+    var tempLine = document.createElement("div");
+    tempLine.textContent = temperatureStatement(p.a.hex, p.b.hex);
+    var brightLine = document.createElement("div");
+    brightLine.textContent = brightnessStatement(p.a.hex, p.b.hex);
+    analysis.appendChild(tempLine);
+    analysis.appendChild(brightLine);
+
+    var saveBtn = document.createElement("button");
+    saveBtn.className = "save-pairing-btn";
+    saveBtn.textContent = "SAVE THIS PAIRING";
+    saveBtn.addEventListener("click", function () {
+      addLogEntry(p.a.name + " + " + p.b.name, "saved pairing");
+      saveBtn.textContent = "SAVED";
+      saveBtn.disabled = true;
+    });
+
+    card.appendChild(blocks);
+    card.appendChild(analysis);
+    card.appendChild(saveBtn);
+    pairingResultEl.appendChild(card);
+  }
+
+  newPairingBtn.addEventListener("click", generatePairing);
+
+  generatePairing();
 
   /* ======================================================
      COLOUR TAB — sub-nav switching
@@ -794,13 +1208,18 @@
     pairings: document.getElementById("subview-pairings")
   };
 
+  function switchColourSubview(key) {
+    subnavBtns.forEach(function (b) {
+      b.classList.toggle("active", b.dataset.subview === key);
+    });
+    Object.keys(subviews).forEach(function (k) {
+      subviews[k].classList.toggle("active", k === key);
+    });
+  }
+
   subnavBtns.forEach(function (btn) {
     btn.addEventListener("click", function () {
-      subnavBtns.forEach(function (b) { b.classList.remove("active"); });
-      btn.classList.add("active");
-      Object.keys(subviews).forEach(function (key) {
-        subviews[key].classList.toggle("active", key === btn.dataset.subview);
-      });
+      switchColourSubview(btn.dataset.subview);
     });
   });
 
@@ -840,25 +1259,37 @@
   var views = {
     look: document.getElementById("view-look"),
     colour: document.getElementById("view-colour"),
-    lens: document.getElementById("view-lens")
+    lens: document.getElementById("view-lens"),
+    log: document.getElementById("view-log")
   };
   var currentView = "look";
 
+  function switchView(key) {
+    navBtns.forEach(function (b) {
+      b.classList.toggle("active", b.dataset.view === key);
+    });
+    currentView = key;
+    Object.keys(views).forEach(function (k) {
+      views[k].classList.toggle("active", k === currentView);
+    });
+    if (currentView === "look") {
+      ensureWakeLockForLook();
+    } else {
+      releaseWakeLock();
+    }
+  }
+
   navBtns.forEach(function (btn) {
     btn.addEventListener("click", function () {
-      navBtns.forEach(function (b) { b.classList.remove("active"); });
-      btn.classList.add("active");
-      currentView = btn.dataset.view;
-      Object.keys(views).forEach(function (key) {
-        views[key].classList.toggle("active", key === currentView);
-      });
-      if (currentView === "look") {
-        ensureWakeLockForLook();
-      } else {
-        releaseWakeLock();
-      }
+      switchView(btn.dataset.view);
     });
   });
+
+  function goToShadeInColour(name, hex) {
+    switchView("colour");
+    switchColourSubview("shades");
+    openFullSwatch(name, hex);
+  }
 
   /* ======================================================
      WAKE LOCK — keep the screen on while reading a prompt
@@ -892,6 +1323,160 @@
   });
 
   ensureWakeLockForLook();
+
+  /* ======================================================
+     FIELD LOG
+     ====================================================== */
+
+  var LOG_KEY = "fth-fieldlog";
+  var MONTH_NAMES = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  function loadLogEntries() {
+    try {
+      var raw = localStorage.getItem(LOG_KEY);
+      if (raw === null) return [];
+      var parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveLogEntries(entries) {
+    try {
+      localStorage.setItem(LOG_KEY, JSON.stringify(entries));
+    } catch (e) {}
+  }
+
+  var logEntries = loadLogEntries();
+
+  function addLogEntry(shade, note) {
+    logEntries.push({ shade: shade, note: note, timestamp: Date.now() });
+    saveLogEntries(logEntries);
+    renderLog();
+  }
+
+  function formatLogDate(ts) {
+    var d = new Date(ts);
+    return d.getDate() + " " + MONTH_NAMES[d.getMonth()];
+  }
+
+  var logListEl = document.getElementById("log-list");
+
+  function renderLog() {
+    logListEl.innerHTML = "";
+
+    if (logEntries.length === 0) {
+      var empty = document.createElement("div");
+      empty.className = "log-empty";
+      empty.textContent = "Nothing logged yet.";
+      logListEl.appendChild(empty);
+      return;
+    }
+
+    var sorted = logEntries.slice().sort(function (a, b) {
+      return b.timestamp - a.timestamp;
+    });
+
+    sorted.forEach(function (entry) {
+      var row = document.createElement("div");
+      row.className = "log-entry";
+
+      var dot = document.createElement("div");
+      dot.className = "log-dot";
+      var known = SHADE_BY_NAME[entry.shade];
+      dot.style.background = known ? known.hex : "#333";
+
+      var main = document.createElement("div");
+      main.className = "log-entry-main";
+      var shadeEl = document.createElement("div");
+      shadeEl.className = "log-entry-shade";
+      shadeEl.textContent = entry.shade;
+      main.appendChild(shadeEl);
+      if (entry.note) {
+        var noteEl = document.createElement("div");
+        noteEl.className = "log-entry-note";
+        noteEl.textContent = entry.note;
+        main.appendChild(noteEl);
+      }
+
+      var dateEl = document.createElement("div");
+      dateEl.className = "log-entry-date";
+      dateEl.textContent = formatLogDate(entry.timestamp);
+
+      var delBtn = document.createElement("button");
+      delBtn.className = "log-delete-btn";
+      delBtn.textContent = "×";
+      delBtn.addEventListener("click", function () {
+        var idx = logEntries.indexOf(entry);
+        if (idx !== -1) {
+          logEntries.splice(idx, 1);
+          saveLogEntries(logEntries);
+          renderLog();
+        }
+      });
+
+      row.appendChild(dot);
+      row.appendChild(main);
+      row.appendChild(dateEl);
+      row.appendChild(delBtn);
+      logListEl.appendChild(row);
+    });
+  }
+
+  renderLog();
+
+  var logShadeInput = document.getElementById("log-shade-input");
+  var logNoteInput = document.getElementById("log-note-input");
+  var logSuggestionsEl = document.getElementById("log-suggestions");
+  var logAddBtn = document.getElementById("log-add-btn");
+
+  function renderShadeSuggestions(query) {
+    query = query.trim().toLowerCase();
+    logSuggestionsEl.innerHTML = "";
+    if (!query) {
+      logSuggestionsEl.classList.remove("active");
+      return;
+    }
+    var matches = ALL_SHADES.filter(function (s) {
+      return s.name.toLowerCase().indexOf(query) !== -1;
+    }).slice(0, 6);
+    if (matches.length === 0) {
+      logSuggestionsEl.classList.remove("active");
+      return;
+    }
+    matches.forEach(function (s) {
+      var item = document.createElement("div");
+      item.className = "log-suggestion-item";
+      item.textContent = s.name;
+      item.addEventListener("click", function () {
+        logShadeInput.value = s.name;
+        logSuggestionsEl.classList.remove("active");
+      });
+      logSuggestionsEl.appendChild(item);
+    });
+    logSuggestionsEl.classList.add("active");
+  }
+
+  logShadeInput.addEventListener("input", function () {
+    renderShadeSuggestions(logShadeInput.value);
+  });
+
+  logShadeInput.addEventListener("blur", function () {
+    setTimeout(function () {
+      logSuggestionsEl.classList.remove("active");
+    }, 150);
+  });
+
+  logAddBtn.addEventListener("click", function () {
+    var shadeVal = logShadeInput.value.trim();
+    var noteVal = logNoteInput.value.trim();
+    if (!shadeVal) return;
+    addLogEntry(shadeVal, noteVal);
+    logShadeInput.value = "";
+    logNoteInput.value = "";
+    logSuggestionsEl.classList.remove("active");
+  });
 
   /* ======================================================
      SERVICE WORKER

@@ -649,88 +649,99 @@
      ====================================================== */
 
   var PROMPTS = {
-    SHADE: [
-      "Find where Amber has decided to stay after the light has moved on",
-      "Look for Rust — not the object, the decision the surface made about time",
-      "Haze is doing something to every colour it touches. What?",
-      "Find a Midnight that contains blue rather than simply being dark",
-      "Where has Ochre survived something?",
-      "Ghost is present. Find where",
-      "Find Oxblood. It will be quieter than you expect",
-      "Where is Smoke accumulating without a fire?",
-      "Find Melon. Look for what gave up trying",
-      "Find Copper that has been earning its colour for years"
+    VEIL: [
+      "Find where two surfaces occupy the same space without touching",
+      "Something should be almost legible. Stop before it resolves",
+      "Find the layer that isn't supposed to be there",
+      "Let what's behind stay uncertain about what's in front",
+      "Find a reflection strong enough to compete with what it's reflecting",
+      "Two versions of the same view are laid over each other. Find where they disagree",
+      "A window can show you two rooms at once if you stand in the third"
+    ],
+    TRACE: [
+      "Find where a body has been many times but isn't now",
+      "A surface can remember a hand. Find one that does",
+      "Find the wear that only comes from someone not thinking about it",
+      "Photograph what stayed after the thing that made it left",
+      "Find where use has become its own kind of decoration",
+      "Find evidence of a habit, not the habit itself"
+    ],
+    OPTICAL: [
+      "Find two colours at the same brightness. Watch what happens to the edge between them",
+      "The grey around you is amplifying something. What?",
+      "Find a colour that makes its neighbour more itself",
+      "Arrange only by light and dark. Let hue fall away",
+      "Let a shape sit flat on the frame instead of receding into it",
+      "Find where warmth and coolness are negotiating the same square foot",
+      "Find a colour surrounded by its opposite. Watch it get louder"
+    ],
+    GESTURE: [
+      "You are not hunting. You are waiting",
+      "Set the trap before you know what you're trapping",
+      "The image exists already. You are finding it, not making it",
+      "Whatever you're about to walk past, don't",
+      "Do less than you want to. See what's left when you stop reaching",
+      "Let your hands be slower than your eyes today"
+    ],
+    SEEING: [
+      "Everyone here is looking at the same thing. Don't",
+      "Get close enough that the object disappears and only colour remains",
+      "Photograph a fragment that gives no clue to the whole",
+      "Follow the reflection instead of the thing it reflects",
+      "What do you keep photographing without meaning to? Do it again, on purpose",
+      "Stay with one thing for longer than feels reasonable",
+      "Choose one subject and refuse every other one today"
     ],
     RHYTHM: [
       "You are moving faster than everything interesting. Slow down until something catches you",
       "Find where two tempos are arguing over the same surface",
       "Stand between the slowest rhythm and the fastest",
-      "Find what is still while everything around it moves",
       "Find the moment something broke from its pattern and hasn't recovered",
-      "The city is breathing at a frequency you're not tuned to yet. Listen before you raise the camera",
-      "Walk at the pace of the slowest thing you can see"
+      "Return to somewhere you've already photographed. See it as if for the first time",
+      "Find a place that is the same every day and catch it being different"
     ],
-    OPTICAL: [
-      "Find two colours at the same brightness. Watch what happens to the edge between them",
-      "The grey around you is amplifying something. What?",
-      "Find a colour that makes the colour next to it more vivid than it would be alone",
-      "Find a colour that has lost its saturation but kept its character",
-      "Two colours are erasing the distance between them. Find where",
-      "Find where temperature changes colour"
-    ],
-    GESTURE: [
-      "You are not hunting. You are waiting",
-      "Set the trap before you know what you're trapping",
-      "The image exists already. You are finding it",
-      "Stop. Wait to be interested rather than deciding to be interested",
-      "The decisive moment is not an event. It is a quality of attention arriving",
-      "You are the hide, not the hunter. Stay still",
-      "Something is moving through a colour field. Don't freeze it",
-      "Whatever you're about to walk past, don't"
-    ],
-    SURFACE: [
-      "Find a surface that remembers something you cannot see",
-      "Find the oldest surface in your current frame",
-      "Find where repetition has left a mark",
-      "Find what nearby has absorbed decades of something",
-      "Find what has become invisible through being ordinary",
-      "What has time worked on longest in what you can see?",
-      "Photograph the absence of something that was here recently"
-    ],
-    SEEING: [
-      "Everyone here is looking at the same thing. Don't",
-      "What can you see without turning your head?",
-      "You are inside the colour field, not looking at it. What does that change?",
-      "Find the veil",
-      "Stand back until the foreground and background share the same plane. How far is that?",
-      "Find a colour decision someone made",
-      "The image already exists in the light. Find it",
-      "You are looking at a surface. Look through it",
-      "Find the surface that separates an interior light from an exterior one. Stand at it",
-      "What do you keep photographing without meaning to? Do it again, on purpose this time",
-      "Stay with one thing for longer than feels reasonable",
-      "Find the detail that would stop a stranger. Not the whole image — the one part"
-    ],
-    LIGHT: [
-      "You are not shooting the subject. You are shooting what the light is doing to the subject",
-      "Turn around. The interesting light is probably behind you",
-      "Find where two different light sources are arguing over the same surface",
-      "The shadow is the subject, not what's casting it",
-      "Shoot into the light. Wait",
-      "The overcast is doing something specific today. What colour is it making everything?",
-      "Listen before you look. What you can hear but not see — find its edge"
+    DISTANCE: [
+      "Find the thing too far away to be certain about. Photograph the uncertainty, not the thing",
+      "Something here is present but its cause is somewhere else. Find the gap",
+      "Find what's missing — not what's absent, what should be here and isn't",
+      "Find a distance that makes something bluer, softer, less true",
+      "Something is happening just outside the frame. Let it stay there"
     ],
     SPACE: [
       "Find a corner. Not a subject in a corner — the corner itself, doing its own work",
-      "What in view is enclosed on three sides? Stand where it can see you back",
-      "Find the smallest space something could be hiding in",
-      "A doorway is not an entrance or an exit. It is both, refusing to choose"
+      "What in view is enclosed on three sides?",
+      "A doorway is not an entrance or an exit. It is both, refusing to choose",
+      "Find the smallest space something could disappear into",
+      "Find where inside and outside share one threshold"
     ],
-    DISTANCE: [
-      "Find the thing that's too far away to be certain about. Photograph the uncertainty, not the thing",
-      "Something here is present but its cause is somewhere else. Find the gap between them",
-      "What would you photograph if you could not walk any closer?",
-      "Find what's missing. Not what's absent — what should be here and isn't"
+    LIGHT: [
+      "You are not shooting the subject. You are shooting what the light is doing to it",
+      "Turn around. The interesting light is probably behind you",
+      "The shadow is the subject, not what's casting it",
+      "Shoot into the light. Wait",
+      "Find where one light source is losing an argument with another",
+      "Find the last surface the light touches before it gives up for the day"
+    ],
+    SHADE: [
+      "Find where Amber has decided to stay after the light has moved on",
+      "Look for Rust — not the object, the decision the surface made about time",
+      "Find a Midnight that contains blue rather than simply being dark",
+      "Ghost is present. Find where",
+      "Find Oxblood. It will be quieter than you expect",
+      "Find a colour that has earned its fading"
+    ],
+    TIME: [
+      "Find something that belongs to two different decades at once",
+      "This has already happened. You are only confirming it",
+      "Photograph something that will look exactly like evidence in twenty years",
+      "Find where the present is quoting the past without meaning to",
+      "Something here is going to disappear. Don't rush it, just notice it will"
+    ],
+    SOLITUDE: [
+      "Make an image that only makes sense to you",
+      "You don't need permission for this one",
+      "Photograph like no one will ever see it",
+      "Find the frame you'd keep even if you deleted everything else today"
     ]
   };
 

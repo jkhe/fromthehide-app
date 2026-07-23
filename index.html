@@ -119,22 +119,67 @@
     padding: 40px 28px;
     text-align: center;
     min-height: 100%;
+    position: relative;
   }
 
-  .look-category {
-    font-size: 12px;
-    letter-spacing: 4px;
+  .look-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .look-container-text {
+    font-size: 18px;
+    line-height: 1.55;
+    color: #999;
+    max-width: 520px;
+    font-weight: 300;
+  }
+
+  .look-divider {
+    width: 32px;
+    height: 1px;
+    background: #2a2a2a;
+    margin: 22px auto;
+  }
+
+  .look-attention-text {
+    font-size: 14px;
+    line-height: 1.55;
+    color: #777;
+    max-width: 460px;
+    font-weight: 300;
+  }
+
+  .look-lens-suggestion {
+    font-size: 10px;
+    letter-spacing: 2px;
     color: #333;
     text-transform: uppercase;
-    margin-bottom: 28px;
+    margin-top: 36px;
+    min-height: 12px;
   }
 
-  .look-prompt {
+  .look-goback-heading {
     font-size: 24px;
-    line-height: 1.65;
+    letter-spacing: 1px;
     color: #999;
-    max-width: 560px;
     font-weight: 300;
+    margin-bottom: 22px;
+  }
+
+  .look-goback-entry {
+    font-size: 18px;
+    line-height: 1.55;
+    color: #aaa;
+    max-width: 520px;
+    font-weight: 300;
+    margin-bottom: 22px;
+  }
+
+  .look-goback-tagline {
+    font-size: 14px;
+    color: #777;
   }
 
   .look-next-wrap {
@@ -161,17 +206,72 @@
     color: #888;
   }
 
-  .look-lens-suggestion {
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: #333;
-    text-transform: uppercase;
-    margin-top: 36px;
-    min-height: 12px;
+  /* --- Post-shoot "walked past" banner --- */
+  .walked-banner {
+    position: absolute;
+    top: calc(env(safe-area-inset-top, 0px) + 44px);
+    left: 20px;
+    right: 20px;
+    background: #161616;
+    border: 1px solid #2a2a2a;
+    border-radius: 3px;
+    padding: 14px 16px;
+    text-align: left;
+    z-index: 5;
   }
 
-  #view-look {
-    position: relative;
+  .walked-dismiss {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    background: none;
+    border: none;
+    color: #444;
+    font-size: 15px;
+    line-height: 1;
+    padding: 6px;
+  }
+
+  .walked-question {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 10px;
+    padding-right: 20px;
+  }
+
+  .walked-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  #walked-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    color: #999;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 9px 10px;
+    border-radius: 3px;
+    outline: none;
+  }
+
+  #walked-input::placeholder {
+    color: #555;
+  }
+
+  .walked-submit-btn {
+    flex: 0 0 auto;
+    background: none;
+    border: 1px solid #333;
+    color: #888;
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 0 14px;
+    border-radius: 3px;
   }
 
   /* ================= COLOUR TAB ================= */
@@ -573,9 +673,17 @@
 
     <!-- ============ LOOK ============ -->
     <section id="view-look" class="view active">
-      <div class="look-category" id="look-category">SHADE</div>
-      <div class="look-prompt" id="look-prompt">Find where Amber has decided to stay after the light has moved on</div>
-      <div class="look-lens-suggestion" id="look-lens"></div>
+      <div class="walked-banner" id="walked-banner" style="display:none">
+        <button class="walked-dismiss" id="walked-dismiss-btn">&times;</button>
+        <div class="walked-question">What did you walk past?</div>
+        <div class="walked-row">
+          <input type="text" id="walked-input" placeholder="in a few words" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <button class="walked-submit-btn" id="walked-submit-btn">log it</button>
+        </div>
+      </div>
+
+      <div class="look-body" id="look-body"></div>
+
       <div class="look-next-wrap">
         <button class="look-next" id="look-next-btn">random</button>
       </div>
@@ -648,104 +756,71 @@
      DATA
      ====================================================== */
 
-  var PROMPTS = {
-    VEIL: [
-      "Find where two surfaces occupy the same space without touching",
-      "Something should be almost legible. Stop before it resolves",
-      "Find the layer that isn't supposed to be there",
-      "Let what's behind stay uncertain about what's in front",
-      "Find a reflection strong enough to compete with what it's reflecting",
-      "Two versions of the same view are laid over each other. Find where they disagree",
-      "A window can show you two rooms at once if you stand in the third"
-    ],
-    TRACE: [
-      "Find where a body has been many times but isn't now",
-      "A surface can remember a hand. Find one that does",
-      "Find the wear that only comes from someone not thinking about it",
-      "Photograph what stayed after the thing that made it left",
-      "Find where use has become its own kind of decoration",
-      "Find evidence of a habit, not the habit itself"
-    ],
-    OPTICAL: [
-      "Find two colours at the same brightness. Watch what happens to the edge between them",
-      "The grey around you is amplifying something. What?",
-      "Find a colour that makes its neighbour more itself",
-      "Arrange only by light and dark. Let hue fall away",
-      "Let a shape sit flat on the frame instead of receding into it",
-      "Find where warmth and coolness are negotiating the same square foot",
-      "Find a colour surrounded by its opposite. Watch it get louder"
-    ],
-    GESTURE: [
-      "You are not hunting. You are waiting",
-      "Set the trap before you know what you're trapping",
-      "The image exists already. You are finding it, not making it",
-      "Whatever you're about to walk past, don't",
-      "Do less than you want to. See what's left when you stop reaching",
-      "Let your hands be slower than your eyes today"
-    ],
-    SEEING: [
-      "Everyone here is looking at the same thing. Don't",
-      "Get close enough that the object disappears and only colour remains",
-      "Photograph a fragment that gives no clue to the whole",
-      "Follow the reflection instead of the thing it reflects",
-      "What do you keep photographing without meaning to? Do it again, on purpose",
-      "Stay with one thing for longer than feels reasonable",
-      "Choose one subject and refuse every other one today"
-    ],
-    RHYTHM: [
-      "You are moving faster than everything interesting. Slow down until something catches you",
-      "Find where two tempos are arguing over the same surface",
-      "Stand between the slowest rhythm and the fastest",
-      "Find the moment something broke from its pattern and hasn't recovered",
-      "Return to somewhere you've already photographed. See it as if for the first time",
-      "Find a place that is the same every day and catch it being different"
-    ],
-    DISTANCE: [
-      "Find the thing too far away to be certain about. Photograph the uncertainty, not the thing",
-      "Something here is present but its cause is somewhere else. Find the gap",
-      "Find what's missing — not what's absent, what should be here and isn't",
-      "Find a distance that makes something bluer, softer, less true",
-      "Something is happening just outside the frame. Let it stay there"
-    ],
-    SPACE: [
-      "Find a corner. Not a subject in a corner — the corner itself, doing its own work",
-      "What in view is enclosed on three sides?",
-      "A doorway is not an entrance or an exit. It is both, refusing to choose",
-      "Find the smallest space something could disappear into",
-      "Find where inside and outside share one threshold"
-    ],
-    LIGHT: [
-      "You are not shooting the subject. You are shooting what the light is doing to it",
-      "Turn around. The interesting light is probably behind you",
-      "The shadow is the subject, not what's casting it",
-      "Shoot into the light. Wait",
-      "Find where one light source is losing an argument with another",
-      "Find the last surface the light touches before it gives up for the day"
-    ],
-    SHADE: [
-      "Find where Amber has decided to stay after the light has moved on",
-      "Look for Rust — not the object, the decision the surface made about time",
-      "Find a Midnight that contains blue rather than simply being dark",
-      "Ghost is present. Find where",
-      "Find Oxblood. It will be quieter than you expect",
-      "Find a colour that has earned its fading"
-    ],
-    TIME: [
-      "Find something that belongs to two different decades at once",
-      "This has already happened. You are only confirming it",
-      "Photograph something that will look exactly like evidence in twenty years",
-      "Find where the present is quoting the past without meaning to",
-      "Something here is going to disappear. Don't rush it, just notice it will"
-    ],
-    SOLITUDE: [
-      "Make an image that only makes sense to you",
-      "You don't need permission for this one",
-      "Photograph like no one will ever see it",
-      "Find the frame you'd keep even if you deleted everything else today"
-    ]
-  };
+  var CONTAINERS = [
+    "One lens. No swapping, whatever happens.",
+    "You cannot get closer than ten paces today.",
+    "Stay in sight of one doorway for ten minutes.",
+    "No shot before your feet have already stopped.",
+    "No shot before the fifth minute of standing still.",
+    "Whatever you shoot first, shoot again in an hour.",
+    "Follow one colour for as long as it stays in view.",
+    "Only shoot what's behind you.",
+    "Walk until you're bored, then start.",
+    "Twelve frames. No more, whatever happens.",
+    "Shoot only from a seated position.",
+    "No shot above waist height today.",
+    "Choose the subject before you cross toward it.",
+    "Stay on this side of the street the whole time.",
+    "The first frame decides the lens for the whole session.",
+    "Only shoot when something else is also moving.",
+    "Don't raise the camera until you've been ignored by three people.",
+    "Same spot, different times. Nothing else changes.",
+    "No frame without a reflection in it.",
+    "Give yourself one hour and one street, nothing more.",
+    "Let the weather choose the lens, not you.",
+    "Shoot only when you weren't planning to.",
+    "Stay until the light changes enough to notice.",
+    "No two frames of the same subject.",
+    "Wait for the second time something happens, not the first.",
+    "Cross the street only if there's a reason beyond photography.",
+    "Let someone else's pace set yours for ten minutes.",
+    "No shot until your hands are cold or tired.",
+    "Frame it, then wait thirty seconds before you press anything.",
+    "Whatever you almost shot yesterday, go find it again."
+  ];
 
-  var CATEGORY_KEYS = Object.keys(PROMPTS);
+  var ATTENTIONS = [
+    "Grain, not subject.",
+    "The gap, not the thing.",
+    "What repeats.",
+    "What's underneath the light.",
+    "Weight, not shape.",
+    "The edge, not the centre.",
+    "What something is standing next to.",
+    "The pause before the gesture.",
+    "What's about to end.",
+    "Two temperatures, one surface.",
+    "What the shadow is doing.",
+    "The colour, not the object.",
+    "What's just out of focus.",
+    "The second glance.",
+    "What doesn't belong here anymore.",
+    "What nobody else is looking at.",
+    "What's been rearranged by hand.",
+    "The quiet in a loud place.",
+    "What's the same as yesterday.",
+    "The distance itself.",
+    "What's behind the reflection.",
+    "Duration, not moment.",
+    "What's been left, not what's arriving.",
+    "The in-between.",
+    "What sound this would make.",
+    "What's almost symmetrical.",
+    "The tiredness in a surface.",
+    "What's older than it looks.",
+    "What two rhythms are doing together.",
+    "The part that isn't the point."
+  ];
 
   var FAMILIES = [
     { name: "Blue", colours: [
@@ -932,121 +1007,84 @@
     return "Strong separation — real depth, no ambiguity";
   }
 
-  function hashStringToInt(str) {
-    var h = 2166136261;
-    for (var i = 0; i < str.length; i++) {
-      h ^= str.charCodeAt(i);
-      h = Math.imul(h, 16777619);
-    }
-    return h >>> 0;
-  }
-
-  function seededRandom01(seed) {
-    var t = (seed += 0x6D2B79F5) >>> 0;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  }
-
-  function todaysDateKey() {
-    var d = new Date();
-    var m = String(d.getMonth() + 1);
-    var day = String(d.getDate());
-    if (m.length < 2) m = "0" + m;
-    if (day.length < 2) day = "0" + day;
-    return d.getFullYear() + "-" + m + "-" + day;
-  }
-
-  function colourOfTheDay() {
-    var seed = hashStringToInt(todaysDateKey());
-    var idx = Math.floor(seededRandom01(seed) * ALL_SHADES.length);
-    return ALL_SHADES[idx];
-  }
-
   /* ======================================================
      LOOK TAB
      ====================================================== */
 
-  var lookCategoryEl = document.getElementById("look-category");
-  var lookPromptEl = document.getElementById("look-prompt");
-  var lookLensEl = document.getElementById("look-lens");
+  var lookBodyEl = document.getElementById("look-body");
   var lookNextBtn = document.getElementById("look-next-btn");
   var lookViewEl = document.getElementById("view-look");
-  var lastLook = null;
 
-  function renderLookPrompt(cat, prompt) {
-    lookPromptEl.innerHTML = "";
-
-    if (cat !== "SHADE") {
-      lookPromptEl.textContent = prompt;
-      return;
-    }
-
+  function renderShadeLinkedText(el, text) {
+    el.innerHTML = "";
     var lastIndex = 0;
     var match;
     SHADE_NAME_REGEX.lastIndex = 0;
-    while ((match = SHADE_NAME_REGEX.exec(prompt)) !== null) {
+    while ((match = SHADE_NAME_REGEX.exec(text)) !== null) {
       if (match.index > lastIndex) {
-        lookPromptEl.appendChild(document.createTextNode(prompt.slice(lastIndex, match.index)));
+        el.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
       }
       var span = document.createElement("span");
       span.className = "shade-link";
       span.textContent = match[0];
       span.dataset.shade = match[0];
-      lookPromptEl.appendChild(span);
+      el.appendChild(span);
       lastIndex = match.index + match[0].length;
     }
-    if (lastIndex < prompt.length) {
-      lookPromptEl.appendChild(document.createTextNode(prompt.slice(lastIndex)));
+    if (lastIndex < text.length) {
+      el.appendChild(document.createTextNode(text.slice(lastIndex)));
     }
   }
 
-  /* one slot, date-seeded so it's the same shade and phrasing all day;
-     kept rare (not equally weighted with the other 9) so it doesn't dominate */
-  var DAY_PROMPT_CHANCE = 0.05;
-  var DAY_PROMPT_TEMPLATES = [
-    function (name) { return name + " is nearby today, quietly. Let it find you"; },
-    function (name) { return name + " is somewhere near you today. Don't go looking for it"; },
-    function (name) { return "Today carries " + name + " in it, if you're paying attention"; }
-  ];
-
-  function getDayPrompt() {
-    var shade = colourOfTheDay();
-    var seed = hashStringToInt(todaysDateKey() + "|day-template");
-    var idx = Math.floor(seededRandom01(seed) * DAY_PROMPT_TEMPLATES.length);
-    return { cat: "DAY", prompt: DAY_PROMPT_TEMPLATES[idx](shade.name) };
-  }
-
-  function nextLook() {
-    var cat, prompt;
-    if (Math.random() < DAY_PROMPT_CHANCE) {
-      var day = getDayPrompt();
-      cat = day.cat;
-      prompt = day.prompt;
-    } else {
-      cat = CATEGORY_KEYS[Math.floor(Math.random() * CATEGORY_KEYS.length)];
-      var list = PROMPTS[cat];
-      prompt = list[Math.floor(Math.random() * list.length)];
-    }
-    var key = cat + "|" + prompt;
-    if (key === lastLook) {
-      nextLook();
-      return;
-    }
-    lastLook = key;
-    lookCategoryEl.textContent = cat;
-    renderLookPrompt(cat, prompt);
-
+  function renderWheelPair() {
+    var container = CONTAINERS[Math.floor(Math.random() * CONTAINERS.length)];
+    var attention = ATTENTIONS[Math.floor(Math.random() * ATTENTIONS.length)];
     var lens = LENSES[Math.floor(Math.random() * LENSES.length)];
-    lookLensEl.textContent = lens.name;
+
+    lookBodyEl.innerHTML =
+      '<div class="look-container-text" id="look-container-text"></div>' +
+      '<div class="look-divider"></div>' +
+      '<div class="look-attention-text" id="look-attention-text"></div>' +
+      '<div class="look-lens-suggestion" id="look-lens-text"></div>';
+
+    renderShadeLinkedText(document.getElementById("look-container-text"), container);
+    renderShadeLinkedText(document.getElementById("look-attention-text"), attention);
+    document.getElementById("look-lens-text").textContent = lens.name;
+  }
+
+  function renderGoBack(entry) {
+    var entryText = entry.shade
+      ? (entry.note ? entry.shade + " — " + entry.note : entry.shade)
+      : (entry.note || "");
+
+    lookBodyEl.innerHTML =
+      '<div class="look-goback-heading">GO BACK.</div>' +
+      '<div class="look-goback-entry" id="look-goback-entry"></div>' +
+      '<div class="look-goback-tagline">Shoot it differently than last time.</div>';
+
+    document.getElementById("look-goback-entry").textContent = entryText;
+  }
+
+  function renderLookInitial() {
+    if (isWeeklyReturnDue()) {
+      var entry = pickReturnEntry();
+      if (entry) {
+        entry.returned = true;
+        saveLogEntries(logEntries);
+        saveLastReturnTs(Date.now());
+        renderGoBack(entry);
+        return;
+      }
+    }
+    renderWheelPair();
   }
 
   lookNextBtn.addEventListener("click", function () {
-    nextLook();
+    renderWheelPair();
     ensureWakeLockForLook();
   });
 
-  lookPromptEl.addEventListener("click", function (e) {
+  lookBodyEl.addEventListener("click", function (e) {
     var target = e.target.closest ? e.target.closest(".shade-link") : null;
     if (!target) return;
     var shade = SHADE_BY_NAME[target.dataset.shade];
@@ -1075,13 +1113,11 @@
       var dy = touch.clientY - startY;
       var dt = Date.now() - startT;
       if (dy < -50 && Math.abs(dx) < 60 && dt < 800) {
-        nextLook();
+        renderWheelPair();
         ensureWakeLockForLook();
       }
     }, { passive: true });
   })();
-
-  nextLook();
 
   /* ======================================================
      COLOUR TAB — SHADES
@@ -1372,10 +1408,81 @@
   var logEntries = loadLogEntries();
 
   function addLogEntry(shade, note) {
-    logEntries.push({ shade: shade, note: note, timestamp: Date.now() });
+    logEntries.push({ shade: shade || null, note: note, timestamp: Date.now(), returned: false });
     saveLogEntries(logEntries);
     renderLog();
   }
+
+  /* ---- weekly "go back" mechanic ---- */
+  var RETURN_KEY = "fth-last-return";
+  var WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+
+  function loadLastReturnTs() {
+    try {
+      var raw = localStorage.getItem(RETURN_KEY);
+      if (raw === null) return 0;
+      var n = parseInt(raw, 10);
+      return isNaN(n) ? 0 : n;
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  function saveLastReturnTs(ts) {
+    try {
+      localStorage.setItem(RETURN_KEY, String(ts));
+    } catch (e) {}
+  }
+
+  function isWeeklyReturnDue() {
+    return (Date.now() - loadLastReturnTs()) >= WEEK_MS;
+  }
+
+  function pickReturnEntry() {
+    if (logEntries.length === 0) return null;
+    var unreturned = logEntries.filter(function (e) { return !e.returned; });
+    if (unreturned.length === 0) {
+      /* full cycle complete — recycle everything */
+      logEntries.forEach(function (e) { e.returned = false; });
+      saveLogEntries(logEntries);
+      unreturned = logEntries.slice();
+    }
+    unreturned.sort(function (a, b) { return a.timestamp - b.timestamp; });
+    return unreturned[0];
+  }
+
+  /* ---- post-shoot "what did you walk past" banner ---- */
+  var walkedBannerEl = document.getElementById("walked-banner");
+  var walkedInputEl = document.getElementById("walked-input");
+  var walkedSubmitBtn = document.getElementById("walked-submit-btn");
+  var walkedDismissBtn = document.getElementById("walked-dismiss-btn");
+  var SIX_HOURS_MS = 6 * 60 * 60 * 1000;
+
+  function checkWalkedPastBanner() {
+    if (logEntries.length === 0) {
+      walkedBannerEl.style.display = "none";
+      return;
+    }
+    var mostRecentTs = Math.max.apply(null, logEntries.map(function (e) { return e.timestamp; }));
+    walkedBannerEl.style.display = (Date.now() - mostRecentTs <= SIX_HOURS_MS) ? "" : "none";
+  }
+
+  walkedDismissBtn.addEventListener("click", function () {
+    walkedBannerEl.style.display = "none";
+  });
+
+  function submitWalkedPast() {
+    var val = walkedInputEl.value.trim();
+    if (!val) return;
+    addLogEntry(null, "[walked past] " + val);
+    walkedInputEl.value = "";
+    walkedBannerEl.style.display = "none";
+  }
+
+  walkedSubmitBtn.addEventListener("click", submitWalkedPast);
+  walkedInputEl.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") submitWalkedPast();
+  });
 
   function formatLogDate(ts) {
     var d = new Date(ts);
@@ -1403,17 +1510,22 @@
       var row = document.createElement("div");
       row.className = "log-entry";
 
-      var dot = document.createElement("div");
-      dot.className = "log-dot";
-      var known = SHADE_BY_NAME[entry.shade];
-      dot.style.background = known ? known.hex : "#333";
+      if (entry.shade) {
+        var dot = document.createElement("div");
+        dot.className = "log-dot";
+        var known = SHADE_BY_NAME[entry.shade];
+        dot.style.background = known ? known.hex : "#333";
+        row.appendChild(dot);
+      }
 
       var main = document.createElement("div");
       main.className = "log-entry-main";
-      var shadeEl = document.createElement("div");
-      shadeEl.className = "log-entry-shade";
-      shadeEl.textContent = entry.shade;
-      main.appendChild(shadeEl);
+      if (entry.shade) {
+        var shadeEl = document.createElement("div");
+        shadeEl.className = "log-entry-shade";
+        shadeEl.textContent = entry.shade;
+        main.appendChild(shadeEl);
+      }
       if (entry.note) {
         var noteEl = document.createElement("div");
         noteEl.className = "log-entry-note";
@@ -1437,7 +1549,6 @@
         }
       });
 
-      row.appendChild(dot);
       row.appendChild(main);
       row.appendChild(dateEl);
       row.appendChild(delBtn);
@@ -1446,6 +1557,8 @@
   }
 
   renderLog();
+  checkWalkedPastBanner();
+  renderLookInitial();
 
   var logShadeInput = document.getElementById("log-shade-input");
   var logNoteInput = document.getElementById("log-note-input");

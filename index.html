@@ -206,10 +206,104 @@
     color: #888;
   }
 
+  /* --- Today's lenses link --- */
+  .lens-today-wrap {
+    position: absolute;
+    top: calc(env(safe-area-inset-top, 0px) + 10px);
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 4;
+  }
+
+  .lens-today-link {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: #444;
+    text-transform: uppercase;
+    padding: 10px;
+  }
+
+  .lens-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.75);
+    padding: 24px;
+  }
+
+  .lens-overlay.active {
+    display: flex;
+  }
+
+  .lens-overlay-card {
+    background: #161616;
+    border: 1px solid #2a2a2a;
+    border-radius: 4px;
+    padding: 24px 20px;
+    width: 100%;
+    max-width: 340px;
+  }
+
+  .lens-overlay-title {
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: #444;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    text-align: center;
+  }
+
+  .lens-overlay-list {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
+
+  .lens-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 6px;
+    font-size: 14px;
+    color: #999;
+    border-bottom: 1px solid #1e1e1e;
+  }
+
+  .lens-row:last-child {
+    border-bottom: none;
+  }
+
+  .lens-checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: #666;
+    flex: 0 0 auto;
+  }
+
+  .lens-overlay-done {
+    width: 100%;
+    background: none;
+    border: 1px solid #333;
+    color: #888;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 12px 0;
+    border-radius: 3px;
+  }
+
   /* --- Post-shoot "walked past" banner --- */
   .walked-banner {
     position: absolute;
-    top: calc(env(safe-area-inset-top, 0px) + 44px);
+    top: calc(env(safe-area-inset-top, 0px) + 40px);
     left: 20px;
     right: 20px;
     background: #161616;
@@ -673,6 +767,10 @@
 
     <!-- ============ LOOK ============ -->
     <section id="view-look" class="view active">
+      <div class="lens-today-wrap">
+        <button class="lens-today-link" id="lens-today-link">TODAY'S LENSES</button>
+      </div>
+
       <div class="walked-banner" id="walked-banner" style="display:none">
         <button class="walked-dismiss" id="walked-dismiss-btn">&times;</button>
         <div class="walked-question">What did you walk past?</div>
@@ -748,6 +846,14 @@
   <div class="swatch-full-hex" id="swatch-full-hex"></div>
 </div>
 
+<div class="lens-overlay" id="lens-overlay">
+  <div class="lens-overlay-card">
+    <div class="lens-overlay-title">TODAY'S LENSES</div>
+    <div class="lens-overlay-list" id="lens-overlay-list"></div>
+    <button class="lens-overlay-done" id="lens-overlay-done-btn">done</button>
+  </div>
+</div>
+
 <script>
 (function () {
   "use strict";
@@ -757,7 +863,6 @@
      ====================================================== */
 
   var CONTAINERS = [
-    "One lens. No swapping, whatever happens.",
     "You cannot get closer than ten paces today.",
     "Stay in sight of one doorway for ten minutes.",
     "No shot before your feet have already stopped.",
@@ -771,13 +876,11 @@
     "No shot above waist height today.",
     "Choose the subject before you cross toward it.",
     "Stay on this side of the street the whole time.",
-    "The first frame decides the lens for the whole session.",
     "Only shoot when something else is also moving.",
     "Don't raise the camera until you've been ignored by three people.",
     "Same spot, different times. Nothing else changes.",
     "No frame without a reflection in it.",
     "Give yourself one hour and one street, nothing more.",
-    "Let the weather choose the lens, not you.",
     "Shoot only when you weren't planning to.",
     "Stay until the light changes enough to notice.",
     "No two frames of the same subject.",
@@ -786,7 +889,46 @@
     "Let someone else's pace set yours for ten minutes.",
     "No shot until your hands are cold or tired.",
     "Frame it, then wait thirty seconds before you press anything.",
-    "Whatever you almost shot yesterday, go find it again."
+    "Whatever you almost shot yesterday, go find it again.",
+    "No shot with both feet planted — stay slightly off balance",
+    "Only shoot on the exhale",
+    "Put the camera all the way down between every frame",
+    "No shot within sight of where you started",
+    "Match your pace to somebody else's before you shoot",
+    "Only one direction allowed today — don't turn around",
+    "No frame taken while standing on flat, even ground",
+    "Photograph only where you'd be allowed to stand for free",
+    "Stay somewhere you're not really supposed to linger",
+    "Ask yourself if you're allowed to be here before every frame",
+    "Nothing in the first ten minutes, whatever you see",
+    "End on your worst frame, not your best",
+    "Photograph nothing you already know the name of",
+    "Only shoot where there's a queue",
+    "Don't look through the viewfinder for the first three frames",
+    "Choose the subject with your eyes closed, then open them",
+    "Stay within arm's reach of something moving fast",
+    "No frame without weather in it somewhere",
+    "Shoot with the strap short enough to feel it",
+    "Stop the second you think \"that's the one\"",
+    "Take the least obvious route to get here",
+    "Photograph something you'd normally step around",
+    "No shot facing the direction you're walking",
+    "Let a stranger's decision redirect you once",
+    "Only shoot uphill, or only shoot downhill",
+    "Same number of steps between every frame",
+    "Photograph before you understand what you're looking at",
+    "Don't finish your coffee before you start",
+    "Let the last person who passed you choose your direction",
+    "Photograph something twice your height and something half your height, same session"
+  ];
+
+  var LENS_CONTAINERS = [
+    "One lens. No swapping, whatever happens.",
+    "The first thing you see decides which lens you use all session.",
+    "Let the weather choose the lens, not you.",
+    "Whichever lens feels wrong today, use that one.",
+    "Switch lenses only if you regret the last frame.",
+    "Carry the one you're least confident with. Use only that."
   ];
 
   var ATTENTIONS = [
@@ -819,7 +961,37 @@
     "The tiredness in a surface.",
     "What's older than it looks.",
     "What two rhythms are doing together.",
-    "The part that isn't the point."
+    "The part that isn't the point.",
+    "What's counting down.",
+    "The seam.",
+    "What two materials are doing to each other.",
+    "What's been apologised for.",
+    "The tell, not the trick.",
+    "What's holding its breath.",
+    "The residue.",
+    "What's slightly too loud.",
+    "The unfinished part.",
+    "What's borrowed.",
+    "The give, not the structure.",
+    "What's been outlived.",
+    "The hinge.",
+    "What two people agreed on without speaking.",
+    "The overflow.",
+    "What's pretending to be something else.",
+    "The interruption.",
+    "What's been promoted above its station.",
+    "The compromise.",
+    "What still works.",
+    "The leftover light.",
+    "What's about to be corrected.",
+    "The half-decision.",
+    "What's carrying more than it should.",
+    "The unnoticed exit.",
+    "What's been mistaken for something else.",
+    "The wrong scale.",
+    "What's softened by use.",
+    "The private joke of the place.",
+    "What nobody bothered to finish."
   ];
 
   var FAMILIES = [
@@ -1015,6 +1187,75 @@
   var lookNextBtn = document.getElementById("look-next-btn");
   var lookViewEl = document.getElementById("view-look");
 
+  /* ---- today's lenses ---- */
+  var LENS_TODAY_KEY = "fth-lenses-today";
+  var LENS_SELECTOR_ORDER = ["Ricoh 28mm", "Sigma 45mm", "Sigma 90mm", "Zeiss Sonnar 50mm", "Elmarit-R 135mm", "Elmarit-R 180mm"];
+
+  function loadSelectedLenses() {
+    try {
+      var raw = localStorage.getItem(LENS_TODAY_KEY);
+      if (raw === null) return LENS_SELECTOR_ORDER.slice();
+      var parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : LENS_SELECTOR_ORDER.slice();
+    } catch (e) {
+      return LENS_SELECTOR_ORDER.slice();
+    }
+  }
+
+  function saveSelectedLenses(list) {
+    try {
+      localStorage.setItem(LENS_TODAY_KEY, JSON.stringify(list));
+    } catch (e) {}
+  }
+
+  function getContainerPool() {
+    var selected = loadSelectedLenses();
+    if (selected.length === 1) return CONTAINERS;
+    return CONTAINERS.concat(LENS_CONTAINERS);
+  }
+
+  var lensTodayLinkBtn = document.getElementById("lens-today-link");
+  var lensOverlayEl = document.getElementById("lens-overlay");
+  var lensOverlayListEl = document.getElementById("lens-overlay-list");
+  var lensOverlayDoneBtn = document.getElementById("lens-overlay-done-btn");
+
+  function renderLensOverlay() {
+    var selected = loadSelectedLenses();
+    lensOverlayListEl.innerHTML = "";
+    LENS_SELECTOR_ORDER.forEach(function (name) {
+      var label = document.createElement("label");
+      label.className = "lens-row";
+
+      var checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.className = "lens-checkbox";
+      checkbox.checked = selected.indexOf(name) !== -1;
+      checkbox.addEventListener("change", function () {
+        var current = loadSelectedLenses();
+        var idx = current.indexOf(name);
+        if (checkbox.checked && idx === -1) current.push(name);
+        if (!checkbox.checked && idx !== -1) current.splice(idx, 1);
+        saveSelectedLenses(current);
+      });
+
+      var span = document.createElement("span");
+      span.textContent = name;
+
+      label.appendChild(checkbox);
+      label.appendChild(span);
+      lensOverlayListEl.appendChild(label);
+    });
+  }
+
+  lensTodayLinkBtn.addEventListener("click", function () {
+    renderLensOverlay();
+    lensOverlayEl.classList.add("active");
+  });
+
+  lensOverlayDoneBtn.addEventListener("click", function () {
+    lensOverlayEl.classList.remove("active");
+  });
+
   function renderShadeLinkedText(el, text) {
     el.innerHTML = "";
     var lastIndex = 0;
@@ -1037,7 +1278,8 @@
   }
 
   function renderWheelPair() {
-    var container = CONTAINERS[Math.floor(Math.random() * CONTAINERS.length)];
+    var pool = getContainerPool();
+    var container = pool[Math.floor(Math.random() * pool.length)];
     var attention = ATTENTIONS[Math.floor(Math.random() * ATTENTIONS.length)];
     var lens = LENSES[Math.floor(Math.random() * LENSES.length)];
 

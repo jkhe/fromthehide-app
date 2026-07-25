@@ -189,6 +189,8 @@
     bottom: 24px;
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 18px;
   }
 
   .look-next {
@@ -204,6 +206,36 @@
 
   .look-next:active {
     color: #888;
+  }
+
+  /* --- Feedback scoring --- */
+  .look-feedback-row {
+    display: flex;
+    gap: 22px;
+    margin-top: 30px;
+  }
+
+  .look-feedback-btn {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: lowercase;
+    color: #444;
+    padding: 8px 6px;
+  }
+
+  .look-feedback-btn:active {
+    color: #888;
+  }
+
+  /* --- "Just walk today" mode --- */
+  .look-justwalk-text {
+    font-size: 18px;
+    line-height: 1.55;
+    color: #999;
+    font-weight: 300;
   }
 
   /* --- Today's lenses link --- */
@@ -225,6 +257,13 @@
     color: #444;
     text-transform: uppercase;
     padding: 10px;
+  }
+
+  .session-counter {
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: #333;
+    margin-top: 2px;
   }
 
   .lens-overlay {
@@ -303,7 +342,7 @@
   /* --- Post-shoot "walked past" banner --- */
   .walked-banner {
     position: absolute;
-    top: calc(env(safe-area-inset-top, 0px) + 40px);
+    top: calc(env(safe-area-inset-top, 0px) + 58px);
     left: 20px;
     right: 20px;
     background: #161616;
@@ -769,6 +808,7 @@
     <section id="view-look" class="view active">
       <div class="lens-today-wrap">
         <button class="lens-today-link" id="lens-today-link">TODAY'S LENSES</button>
+        <div class="session-counter" id="session-counter"></div>
       </div>
 
       <div class="walked-banner" id="walked-banner" style="display:none">
@@ -784,6 +824,7 @@
 
       <div class="look-next-wrap">
         <button class="look-next" id="look-next-btn">random</button>
+        <button class="look-next" id="just-walk-btn">just walk today</button>
       </div>
     </section>
 
@@ -863,130 +904,56 @@
      ====================================================== */
 
   var CONTAINERS = [
-    { text: "Whatever you shoot first, shoot again in an hour.", pace: "any" },
-    { text: "Walk until you're bored, then start.", pace: "any" },
-    { text: "No shot above waist height today.", pace: "any" },
-    { text: "No frame without a reflection in it.", pace: "any" },
-    { text: "No two frames of the same subject.", pace: "any" },
-    { text: "Let someone else's pace set yours for ten minutes.", pace: "any" },
-    { text: "Whatever you almost shot yesterday, go find it again.", pace: "any" },
-    { text: "Photograph only where you'd be allowed to stand for free.", pace: "any" },
-    { text: "End on your worst frame, not your best.", pace: "any" },
-    { text: "Photograph nothing you already know the name of.", pace: "any" },
-    { text: "No frame without weather in it somewhere.", pace: "any" },
-    { text: "Take the least obvious route to get here.", pace: "any" },
-    { text: "Photograph something you'd normally step around.", pace: "any" },
-    { text: "Only shoot uphill, or only shoot downhill.", pace: "any" },
-    { text: "Photograph before you understand what you're looking at.", pace: "any" },
-    { text: "Cross a threshold before you shoot \u2014 a step, a gate, a doorway.", pace: "any" },
-    { text: "Photograph what a queue is waiting for, not the queue itself.", pace: "any" },
-    { text: "Frame from a height you don't usually use.", pace: "any" },
-    { text: "Photograph only what's in someone else's eyeline, not yours.", pace: "any" },
-    { text: "Don't shoot the busiest thing in view \u2014 shoot what's next to it.", pace: "any" },
-    { text: "No frame unless you can hear something you can't see.", pace: "any" },
-    { text: "Photograph the version that isn't the best angle.", pace: "any" },
-    { text: "Let a closed door end the route, not open one.", pace: "any" },
-    { text: "No shot until you've said no to three easier ones.", pace: "any" },
-    { text: "Photograph something that's about to be in your way.", pace: "any" },
-    { text: "Return to where you stood yesterday and don't move until something is different.", pace: "any" },
-    { text: "Let a stopped clock or a dead sign choose your subject.", pace: "any" },
-    { text: "Find the thing that would only make sense to someone who lives here.", pace: "any" },
-    { text: "Let the smallest object in view decide the frame, not the largest.", pace: "any" },
-    { text: "Photograph a threshold before you cross it, then again after.", pace: "any" },
-    { text: "Return to the last place that disappointed you.", pace: "any" },
-    { text: "Let your own shadow decide the frame, not your feet.", pace: "any" },
-    { text: "Photograph only what's still there from decades ago.", pace: "any" },
-    { text: "Let the sound stop you before the sight does.", pace: "any" },
-    { text: "Shoot the version of the street where nobody is looking at you.", pace: "any" },
-    { text: "Choose a boundary \u2014 a kerb, a step, a line \u2014 and don't cross it today.", pace: "any" },
-    { text: "Photograph what's been repaired badly.", pace: "any" },
-    { text: "Shoot the thing you almost decided wasn't worth it.", pace: "any" },
-    { text: "Photograph the gap between two things, not the things.", pace: "any" },
-    { text: "Choose the least dramatic version of what you see.", pace: "any" },
-    { text: "Find the thing so common it stopped being counted.", pace: "any" },
-    { text: "Find a space built for one body, not for movement.", pace: "any" },
-    { text: "Find where something has made itself small on purpose.", pace: "any" },
-    { text: "Photograph the inside of a boundary, not the boundary itself.", pace: "any" },
-    { text: "Find where something seems to be happening with no one doing it.", pace: "any" },
-    { text: "Photograph the agency you can't locate.", pace: "any" },
-    { text: "Something here shouldn't still be working. Find it.", pace: "any" },
-    { text: "Find the thing that's better from far away than close up.", pace: "any" },
-    { text: "Find two time periods in the same frame, uncommented on.", pace: "any" },
-    { text: "Photograph something that looks like it's already a memory.", pace: "any" },
-    { text: "Find where the past is doing the present's job.", pace: "any" },
-    { text: "Find the colour someone chose on purpose, then forgot about.", pace: "any" },
-    { text: "Let foreground and background argue about which one is real.", pace: "any" },
-    { text: "Photograph what would only wound you, not anyone else.", pace: "any" },
-    { text: "Find the detail that has nothing to do with the subject.", pace: "any" },
-    { text: "Follow one colour for as long as it stays in view.", pace: "reactive" },
-    { text: "Only shoot what's behind you.", pace: "reactive" },
-    { text: "Choose the subject before you cross toward it.", pace: "reactive" },
-    { text: "Shoot only when you weren't planning to.", pace: "reactive" },
-    { text: "Cross the street only if there's a reason beyond photography.", pace: "reactive" },
-    { text: "No shot within sight of where you started.", pace: "reactive" },
-    { text: "Match your pace to somebody else's before you shoot.", pace: "reactive" },
-    { text: "Only one direction allowed today \u2014 don't turn around.", pace: "reactive" },
-    { text: "Don't look through the viewfinder for the first three frames.", pace: "reactive" },
-    { text: "Stay within arm's reach of something moving fast.", pace: "reactive" },
-    { text: "Stop the second you think \"that's the one.\"", pace: "reactive" },
-    { text: "No shot facing the direction you're walking.", pace: "reactive" },
-    { text: "Let a stranger's decision redirect you once.", pace: "reactive" },
-    { text: "Let the last person who passed you choose your direction.", pace: "reactive" },
-    { text: "Follow the route a delivery would take, not a pedestrian.", pace: "reactive" },
-    { text: "Walk the crack in the pavement, not the pavement.", pace: "reactive" },
-    { text: "Time your shutter to somebody else's footstep, not your own.", pace: "reactive" },
-    { text: "Follow the general direction of a stranger ahead of you until it stops feeling accidental, then stop and look around.", pace: "reactive" },
-    { text: "Find a gesture that belongs to no one else.", pace: "reactive" },
-    { text: "Someone is having a private conversation with an object. Find it.", pace: "reactive" },
-    { text: "Find the moment a hand decides something before the person does.", pace: "reactive" },
-    { text: "Photograph the shape someone's body makes around a phone call.", pace: "reactive" },
-    { text: "What is someone's hand doing that their face isn't matching?", pace: "reactive" },
-    { text: "Watch for the gesture that happens right before a decision is spoken.", pace: "reactive" },
-    { text: "Find where a body is negotiating with an object that won't cooperate.", pace: "reactive" },
-    { text: "Ignore the obvious meaning. Find the accident instead.", pace: "reactive" },
-    { text: "Take the route that isn't on any map of this place.", pace: "reactive" },
-    { text: "Use a space for something it wasn't built for. Find someone else doing that first.", pace: "reactive" },
-    { text: "Get slightly lost on purpose, then look up.", pace: "reactive" },
-    { text: "Let not knowing where you are choose the frame.", pace: "reactive" },
-    { text: "Walk as if you have nowhere to be and nothing to buy.", pace: "reactive" },
-    { text: "Find the threshold between a private errand and public performance.", pace: "reactive" },
-    { text: "Follow a gesture until it resolves into a decision, then shoot before it does.", pace: "reactive" },
-    { text: "Find someone doing two things at once without noticing either.", pace: "reactive" },
-    { text: "Catch the exact second a private moment becomes public.", pace: "reactive" },
-    { text: "You cannot get closer than ten paces today.", pace: "slow" },
-    { text: "Stay in sight of one doorway for ten minutes.", pace: "slow" },
-    { text: "No shot before the fifth minute of standing still.", pace: "slow" },
-    { text: "Shoot only from a seated position.", pace: "slow" },
-    { text: "Stay on this side of the street the whole time.", pace: "slow" },
-    { text: "Don't raise the camera until you've been ignored by three people.", pace: "slow" },
-    { text: "Stay until the light changes enough to notice.", pace: "slow" },
-    { text: "Wait for the second time something happens, not the first.", pace: "slow" },
-    { text: "Stay until waiting stops being comfortable.", pace: "slow" },
-    { text: "Frame it, then wait thirty seconds before you press anything.", pace: "slow" },
-    { text: "Lower the camera fully after every frame. Raise it again only when something is worth the decision.", pace: "slow" },
-    { text: "Nothing in the first ten minutes, whatever you see.", pace: "slow" },
-    { text: "Shoot the second time you notice something, never the first.", pace: "slow" },
-    { text: "Stay until you've been overtaken by three people.", pace: "slow" },
-    { text: "No shot until you've walked past it once already.", pace: "slow" },
-    { text: "Stay within five minutes of one bench, bin, or post.", pace: "slow" },
-    { text: "Give the frame to whoever is moving fastest through it, then wait for them to leave.", pace: "slow" },
-    { text: "Photograph the same corner at the start and the end of the session.", pace: "slow" },
-    { text: "Choose your position, then don't move it even if the light gets worse.", pace: "slow" },
-    { text: "Take the frame only after you've stopped trying to get it.", pace: "slow" },
-    { text: "Give five minutes to a place where nothing is obviously happening.", pace: "slow" },
-    { text: "Stay until someone else leaves first.", pace: "slow" },
-    { text: "Find the gesture that repeats even when nobody's watching.", pace: "slow" },
-    { text: "Someone is performing a habit that has outlived its reason. Find it.", pace: "slow" },
-    { text: "Look at one small thing until you've exhausted what you already know about it.", pace: "slow" },
-    { text: "Describe to yourself exactly what's in front of you before you shoot it.", pace: "slow" },
-    { text: "Find the exact edge where a thing stops being itself and becomes background.", pace: "slow" },
-    { text: "List everything you can see before you choose what to shoot.", pace: "slow" },
-    { text: "Photograph an inventory, not an event.", pace: "slow" },
-    { text: "Catalogue what's passed this spot in the last five minutes before you shoot.", pace: "slow" },
-    { text: "Find a place that feels tended by no one in particular.", pace: "slow" },
-    { text: "Wait for the gesture to happen a second time before you believe it's real.", pace: "slow" },
-    { text: "Give a single gesture the same attention you'd give a whole scene.", pace: "slow" },
-    { text: "Stay until you can predict what happens next, then shoot the moment you're wrong.", pace: "slow" }
+    { text: "Whatever you shoot first, shoot again in an hour.", pace: "any", axis: "rhythm" },
+    { text: "Walk until you're bored, then start.", pace: "any", axis: "rhythm" },
+    { text: "No frame without a reflection in it.", pace: "any", axis: "optical" },
+    { text: "Photograph nothing you already know the name of.", pace: "any", axis: "perception" },
+    { text: "No frame without weather in it somewhere.", pace: "any", axis: "light" },
+    { text: "Photograph something you'd normally step around.", pace: "any", axis: "trace" },
+    { text: "Photograph before you understand what you're looking at.", pace: "any", axis: "perception" },
+    { text: "Cross a threshold before you shoot \u2014 a step, a gate, a doorway.", pace: "any", axis: "space" },
+    { text: "Photograph what a queue is waiting for, not the queue itself.", pace: "any", axis: "distance" },
+    { text: "Photograph only what's in someone else's eyeline, not yours.", pace: "any", axis: "gesture" },
+    { text: "Don't shoot the busiest thing in view \u2014 shoot what's next to it.", pace: "any", axis: "distance" },
+    { text: "No frame unless you can hear something you can't see.", pace: "any", axis: "distance" },
+    { text: "No shot until you've said no to three easier ones.", pace: "any", axis: "gesture" },
+    { text: "Let a stopped clock or a dead sign choose your subject.", pace: "any", axis: "trace" },
+    { text: "Find the thing that would only make sense to someone who lives here.", pace: "any", axis: "trace" },
+    { text: "Return to the last place that disappointed you.", pace: "any", axis: "rhythm" },
+    { text: "Photograph what's been repaired badly.", pace: "any", axis: "trace" },
+    { text: "Photograph the gap between two things, not the things.", pace: "any", axis: "distance" },
+    { text: "Find the thing so common it stopped being counted.", pace: "any", axis: "trace" },
+    { text: "Photograph what would only wound you, not anyone else.", pace: "any", axis: "gesture" },
+    { text: "Follow one colour for as long as it stays in view.", pace: "reactive", axis: "optical" },
+    { text: "Only shoot what's behind you.", pace: "reactive", axis: "perception" },
+    { text: "Choose the subject before you cross toward it.", pace: "reactive", axis: "gesture" },
+    { text: "Match your pace to somebody else's before you shoot.", pace: "reactive", axis: "rhythm" },
+    { text: "Stay within arm's reach of something moving fast.", pace: "reactive", axis: "rhythm" },
+    { text: "Stop the second you think \"that's the one.\"", pace: "reactive", axis: "gesture" },
+    { text: "Let a stranger's decision redirect you once.", pace: "reactive", axis: "rhythm" },
+    { text: "Find a gesture that belongs to no one else.", pace: "reactive", axis: "gesture" },
+    { text: "Find the moment a hand decides something before the person does.", pace: "reactive", axis: "gesture" },
+    { text: "What is someone's hand doing that their face isn't matching?", pace: "reactive", axis: "gesture" },
+    { text: "Find where a body is negotiating with an object that won't cooperate.", pace: "reactive", axis: "gesture" },
+    { text: "Take the route that isn't on any map of this place.", pace: "reactive", axis: "space" },
+    { text: "Get slightly lost on purpose, then look up.", pace: "reactive", axis: "space" },
+    { text: "Find the threshold between a private errand and public performance.", pace: "reactive", axis: "space" },
+    { text: "Catch the exact second a private moment becomes public.", pace: "reactive", axis: "gesture" },
+    { text: "You cannot get closer than ten paces today.", pace: "slow", axis: "distance" },
+    { text: "Stay in sight of one doorway for ten minutes.", pace: "slow", axis: "space" },
+    { text: "No shot before the fifth minute of standing still.", pace: "slow", axis: "rhythm" },
+    { text: "Shoot only from a seated position.", pace: "slow", axis: "space" },
+    { text: "Don't raise the camera until you've been ignored by three people.", pace: "slow", axis: "gesture" },
+    { text: "Wait for the second time something happens, not the first.", pace: "slow", axis: "rhythm" },
+    { text: "Lower the camera fully after every frame. Raise it again only when something is worth the decision.", pace: "slow", axis: "gesture" },
+    { text: "Nothing in the first ten minutes, whatever you see.", pace: "slow", axis: "rhythm" },
+    { text: "Stay within five minutes of one bench, bin, or post.", pace: "slow", axis: "space" },
+    { text: "Choose your position, then don't move it even if the light gets worse.", pace: "slow", axis: "light" },
+    { text: "Take the frame only after you've stopped trying to get it.", pace: "slow", axis: "gesture" },
+    { text: "Give five minutes to a place where nothing is obviously happening.", pace: "slow", axis: "rhythm" },
+    { text: "Find the gesture that repeats even when nobody's watching.", pace: "slow", axis: "trace" },
+    { text: "Look at one small thing until you've exhausted what you already know about it.", pace: "slow", axis: "perception" },
+    { text: "Find the exact edge where a thing stops being itself and becomes background.", pace: "slow", axis: "optical" }
   ];
 
   var LENS_CONTAINERS = [
@@ -999,120 +966,36 @@
   ];
 
   var ATTENTIONS = [
-    "Grain, not subject.",
-    "The gap, not the thing.",
-    "What repeats.",
-    "What's underneath the light.",
-    "Weight, not shape.",
-    "The edge, not the centre.",
-    "What something is standing next to.",
-    "The pause before the gesture.",
-    "What's about to end.",
-    "Two temperatures, one surface.",
-    "What the shadow is doing.",
-    "The colour, not the object.",
-    "What's just out of focus.",
-    "The second glance.",
-    "What doesn't belong here anymore.",
-    "What nobody else is looking at.",
-    "What's been rearranged by hand.",
-    "The quiet in a loud place.",
-    "What's the same as yesterday.",
-    "The distance itself.",
-    "What's behind the reflection.",
-    "Duration, not moment.",
-    "What's been left, not what's arriving.",
-    "The in-between.",
-    "What sound this would make.",
-    "What's almost symmetrical.",
-    "The tiredness in a surface.",
-    "What's older than it looks.",
-    "What two rhythms are doing together.",
-    "The part that isn't the point.",
-    "What's counting down.",
-    "The seam.",
-    "What two materials are doing to each other.",
-    "The tell, not the trick.",
-    "What's holding its breath.",
-    "The residue.",
-    "What's slightly too loud.",
-    "The unfinished part.",
-    "What's borrowed.",
-    "The give, not the structure.",
-    "What's been outlived.",
-    "The hinge.",
-    "What two people agreed on without speaking.",
-    "The overflow.",
-    "What's pretending to be something else.",
-    "The interruption.",
-    "What's been promoted above its station.",
-    "The compromise.",
-    "What still works.",
-    "The leftover light.",
-    "The half-decision.",
-    "What's carrying more than it should.",
-    "The unnoticed exit.",
-    "What's been mistaken for something else.",
-    "The wrong scale.",
-    "What's softened by use.",
-    "What nobody bothered to finish.",
-    "What's being trained into a shape by repetition.",
-    "The proof something happened here.",
-    "What the light hasn't decided about yet.",
-    "The version nobody photographs.",
-    "What's louder in memory than in front of you.",
-    "The distance that makes it believable.",
-    "What's been let go of.",
-    "The correspondence between two unlike things.",
-    "What a stranger's gesture is doing without them noticing.",
-    "The thing that's only interesting from here.",
-    "What's been worn smooth by not being thought about.",
-    "The moment before recognition arrives.",
-    "What two eras are doing in the same frame.",
-    "The part of the routine nobody schedules.",
-    "What's holding a boundary up.",
-    "The exact edge of legible.",
-    "What's been mistaken for permanent.",
-    "What's just about to lose its shape.",
-    "The thing that explains nothing.",
-    "What a place remembers better than you do.",
-    "The pause a rhythm makes before it changes.",
-    "What's been folded into the ordinary until it disappeared.",
-    "The gesture, not the person.",
-    "What the hand knows before the face does.",
-    "The private call in public.",
-    "What's rehearsed without noticing.",
-    "The decision before the decision.",
-    "What's being destroyed quietly.",
-    "The negotiation with an object.",
-    "What repeats without an audience.",
-    "The habit outliving its reason.",
-    "What's exhausted by looking.",
-    "The edge of legible detail.",
-    "The undramatic version.",
-    "What hasn't been counted.",
-    "The inventory, not the event.",
-    "What's just passed through.",
-    "The space built for one body.",
-    "What's made itself smaller.",
-    "The inside of the boundary.",
-    "Agency with no visible source.",
-    "What's tended by no one.",
-    "What shouldn't still work.",
-    "The view that's better from far away.",
-    "Two eras, uncommented on.",
-    "What's already a memory.",
-    "The past doing today's job.",
-    "A colour someone forgot they chose.",
-    "Which one is real, foreground or background.",
-    "The wound in the detail.",
-    "What has nothing to do with the subject.",
-    "The private conversation with an object.",
-    "What's rehearsed like a ritual.",
-    "The gesture repeated until it's not one anymore.",
-    "What's arranged by habit.",
-    "The moment before it becomes legible.",
-    "What the routine forgot to hide."
+    { text: "Grain, not subject.", axis: "optical" },
+    { text: "The gap, not the thing.", axis: "distance" },
+    { text: "What repeats.", axis: "rhythm" },
+    { text: "Weight, not shape.", axis: "optical" },
+    { text: "The pause before the gesture.", axis: "gesture" },
+    { text: "Two temperatures, one surface.", axis: "optical" },
+    { text: "What the shadow is doing.", axis: "light" },
+    { text: "What's just out of focus.", axis: "optical" },
+    { text: "What doesn't belong here anymore.", axis: "trace" },
+    { text: "What's been rearranged by hand.", axis: "trace" },
+    { text: "The distance itself.", axis: "distance" },
+    { text: "Duration, not moment.", axis: "rhythm" },
+    { text: "What sound this would make.", axis: "distance" },
+    { text: "The tiredness in a surface.", axis: "trace" },
+    { text: "What two rhythms are doing together.", axis: "rhythm" },
+    { text: "The seam.", axis: "space" },
+    { text: "What two materials are doing to each other.", axis: "optical" },
+    { text: "The tell, not the trick.", axis: "gesture" },
+    { text: "The residue.", axis: "trace" },
+    { text: "What's borrowed.", axis: "trace" },
+    { text: "The hinge.", axis: "space" },
+    { text: "What's pretending to be something else.", axis: "perception" },
+    { text: "The leftover light.", axis: "light" },
+    { text: "What's carrying more than it should.", axis: "gesture" },
+    { text: "What's been mistaken for something else.", axis: "perception" },
+    { text: "What's softened by use.", axis: "trace" },
+    { text: "The gesture, not the person.", axis: "gesture" },
+    { text: "What the hand knows before the face does.", axis: "gesture" },
+    { text: "The moment before recognition arrives.", axis: "perception" },
+    { text: "What a place remembers better than you do.", axis: "trace" }
   ];
 
   var FAMILIES = [
@@ -1350,13 +1233,64 @@
     var pool = CONTAINERS.filter(function (c) {
       if (c.pace === "any") return true;
       return !!activePaces[c.pace];
-    }).map(function (c) { return c.text; });
+    }).map(function (c) { return { text: c.text, axis: c.axis }; });
 
     if (selected.length >= 2) {
-      pool = pool.concat(LENS_CONTAINERS);
+      LENS_CONTAINERS.forEach(function (text) {
+        pool.push({ text: text, axis: null });
+      });
     }
 
     return pool;
+  }
+
+  /* ---- feedback scoring ---- */
+  var PROMPT_SCORES_KEY = "fth-prompt-scores";
+
+  function loadPromptScores() {
+    try {
+      var raw = localStorage.getItem(PROMPT_SCORES_KEY);
+      if (raw === null) return {};
+      var parsed = JSON.parse(raw);
+      return (parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? parsed : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function savePromptScores(scores) {
+    try {
+      localStorage.setItem(PROMPT_SCORES_KEY, JSON.stringify(scores));
+    } catch (e) {}
+  }
+
+  function weightedRandomPick(items, getText) {
+    var scores = loadPromptScores();
+    var weights = items.map(function (item) {
+      var raw = scores[getText(item)] || 0;
+      return 1 + Math.max(raw, -0.8);
+    });
+    var total = weights.reduce(function (a, b) { return a + b; }, 0);
+    var r = Math.random() * total;
+    for (var i = 0; i < items.length; i++) {
+      r -= weights[i];
+      if (r <= 0) return items[i];
+    }
+    return items[items.length - 1];
+  }
+
+  var currentContainerText = null;
+  var currentAttentionText = null;
+
+  function applyFeedback(kept) {
+    if (!currentContainerText && !currentAttentionText) return;
+    var scores = loadPromptScores();
+    [currentContainerText, currentAttentionText].forEach(function (text) {
+      if (!text) return;
+      var current = scores[text] || 0;
+      scores[text] = kept ? (current + 1) : Math.max(current - 0.5, -2);
+    });
+    savePromptScores(scores);
   }
 
   var lensTodayLinkBtn = document.getElementById("lens-today-link");
@@ -1401,6 +1335,55 @@
     lensOverlayEl.classList.remove("active");
   });
 
+  /* ---- session counter ---- */
+  var SESSION_COUNT_KEY = "fth-session-count";
+  var LAST_OPENED_KEY = "fth-last-opened-date";
+
+  function localDateKey() {
+    var d = new Date();
+    var m = String(d.getMonth() + 1);
+    var day = String(d.getDate());
+    if (m.length < 2) m = "0" + m;
+    if (day.length < 2) day = "0" + day;
+    return d.getFullYear() + "-" + m + "-" + day;
+  }
+
+  function ordinalSuffix(n) {
+    var j = n % 10, k = n % 100;
+    if (j === 1 && k !== 11) return n + "st";
+    if (j === 2 && k !== 12) return n + "nd";
+    if (j === 3 && k !== 13) return n + "rd";
+    return n + "th";
+  }
+
+  function bumpAndLoadSessionCount() {
+    var today = localDateKey();
+    var lastOpened = null;
+    try { lastOpened = localStorage.getItem(LAST_OPENED_KEY); } catch (e) {}
+
+    var count = 0;
+    try {
+      var raw = localStorage.getItem(SESSION_COUNT_KEY);
+      count = raw !== null ? parseInt(raw, 10) : 0;
+      if (isNaN(count)) count = 0;
+    } catch (e) {
+      count = 0;
+    }
+
+    if (lastOpened !== today) {
+      count += 1;
+      try {
+        localStorage.setItem(SESSION_COUNT_KEY, String(count));
+        localStorage.setItem(LAST_OPENED_KEY, today);
+      } catch (e) {}
+    }
+
+    return count;
+  }
+
+  var sessionCounterEl = document.getElementById("session-counter");
+  sessionCounterEl.textContent = ordinalSuffix(bumpAndLoadSessionCount()) + " time out";
+
   function renderShadeLinkedText(el, text) {
     el.innerHTML = "";
     var lastIndex = 0;
@@ -1424,24 +1407,46 @@
 
   function renderWheelPair() {
     var pool = getContainerPool();
-    var container = pool[Math.floor(Math.random() * pool.length)];
-    var attention = ATTENTIONS[Math.floor(Math.random() * ATTENTIONS.length)];
+    var containerItem = weightedRandomPick(pool, function (item) { return item.text; });
+
+    var attentionPool = containerItem.axis
+      ? ATTENTIONS.filter(function (a) { return a.axis === containerItem.axis; })
+      : ATTENTIONS;
+    if (attentionPool.length === 0) attentionPool = ATTENTIONS;
+    var attentionItem = weightedRandomPick(attentionPool, function (item) { return item.text; });
+
     var selectedLenses = loadSelectedLenses();
     var lensPool = selectedLenses.length > 0 ? selectedLenses : LENS_SELECTOR_ORDER;
     var lensName = lensPool[Math.floor(Math.random() * lensPool.length)];
+
+    currentContainerText = containerItem.text;
+    currentAttentionText = attentionItem.text;
 
     lookBodyEl.innerHTML =
       '<div class="look-container-text" id="look-container-text"></div>' +
       '<div class="look-divider"></div>' +
       '<div class="look-attention-text" id="look-attention-text"></div>' +
-      '<div class="look-lens-suggestion" id="look-lens-text"></div>';
+      '<div class="look-lens-suggestion" id="look-lens-text"></div>' +
+      '<div class="look-feedback-row">' +
+      '<button class="look-feedback-btn" id="feedback-keep-btn">kept it</button>' +
+      '<button class="look-feedback-btn" id="feedback-skip-btn">skip</button>' +
+      '</div>';
 
-    renderShadeLinkedText(document.getElementById("look-container-text"), container);
-    renderShadeLinkedText(document.getElementById("look-attention-text"), attention);
+    renderShadeLinkedText(document.getElementById("look-container-text"), containerItem.text);
+    renderShadeLinkedText(document.getElementById("look-attention-text"), attentionItem.text);
     document.getElementById("look-lens-text").textContent = lensName;
   }
 
+  function renderJustWalk() {
+    currentContainerText = null;
+    currentAttentionText = null;
+    lookBodyEl.innerHTML = '<div class="look-justwalk-text">No prompt. Just look.</div>';
+  }
+
   function renderGoBack(entry) {
+    currentContainerText = null;
+    currentAttentionText = null;
+
     var entryText = entry.shade
       ? (entry.note ? entry.shade + " — " + entry.note : entry.shade)
       : (entry.note || "");
@@ -1473,12 +1478,27 @@
     ensureWakeLockForLook();
   });
 
+  var justWalkBtn = document.getElementById("just-walk-btn");
+  justWalkBtn.addEventListener("click", function () {
+    renderJustWalk();
+    ensureWakeLockForLook();
+  });
+
   lookBodyEl.addEventListener("click", function (e) {
-    var target = e.target.closest ? e.target.closest(".shade-link") : null;
-    if (!target) return;
-    var shade = SHADE_BY_NAME[target.dataset.shade];
-    if (!shade) return;
-    goToShadeInColour(shade.name, shade.hex);
+    var shadeTarget = e.target.closest ? e.target.closest(".shade-link") : null;
+    if (shadeTarget) {
+      var shade = SHADE_BY_NAME[shadeTarget.dataset.shade];
+      if (shade) goToShadeInColour(shade.name, shade.hex);
+      return;
+    }
+    if (e.target.id === "feedback-keep-btn") {
+      applyFeedback(true);
+      return;
+    }
+    if (e.target.id === "feedback-skip-btn") {
+      applyFeedback(false);
+      return;
+    }
   });
 
   /* swipe up anywhere on the LOOK screen shuffles too */

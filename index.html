@@ -1281,7 +1281,9 @@
     var pool = getContainerPool();
     var container = pool[Math.floor(Math.random() * pool.length)];
     var attention = ATTENTIONS[Math.floor(Math.random() * ATTENTIONS.length)];
-    var lens = LENSES[Math.floor(Math.random() * LENSES.length)];
+    var selectedLenses = loadSelectedLenses();
+    var lensPool = selectedLenses.length > 0 ? selectedLenses : LENS_SELECTOR_ORDER;
+    var lensName = lensPool[Math.floor(Math.random() * lensPool.length)];
 
     lookBodyEl.innerHTML =
       '<div class="look-container-text" id="look-container-text"></div>' +
@@ -1291,7 +1293,7 @@
 
     renderShadeLinkedText(document.getElementById("look-container-text"), container);
     renderShadeLinkedText(document.getElementById("look-attention-text"), attention);
-    document.getElementById("look-lens-text").textContent = lens.name;
+    document.getElementById("look-lens-text").textContent = lensName;
   }
 
   function renderGoBack(entry) {

@@ -825,12 +825,13 @@
 
   .locations-add-form {
     display: flex;
+    flex-direction: column;
     gap: 8px;
   }
 
-  #add-location-input {
-    flex: 1 1 auto;
-    min-width: 0;
+  #add-location-input,
+  #add-location-section-input {
+    width: 100%;
     background: #1a1a1a;
     border: 1px solid #2a2a2a;
     color: #999;
@@ -841,12 +842,13 @@
     outline: none;
   }
 
-  #add-location-input::placeholder {
+  #add-location-input::placeholder,
+  #add-location-section-input::placeholder {
     color: #555;
   }
 
   .locations-add-btn {
-    flex: 0 0 auto;
+    width: 100%;
     background: none;
     border: 1px solid #333;
     color: #888;
@@ -854,7 +856,7 @@
     font-size: 10px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    padding: 0 14px;
+    padding: 11px 0;
     border-radius: 3px;
   }
 
@@ -1090,6 +1092,7 @@
           <button class="locations-link-btn" id="add-location-link-btn">+ ADD LOCATION</button>
           <div class="locations-add-form" id="add-location-form" style="display:none">
             <input type="text" id="add-location-input" placeholder="name" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <input type="text" id="add-location-section-input" placeholder="area, e.g. EAST LONDON (optional)" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
             <button class="locations-add-btn" id="add-location-submit-btn">ADD</button>
           </div>
           <div class="shortlist-row">
@@ -2507,28 +2510,53 @@
     return row;
   }
 
+  function normalizeSectionKey(text) {
+    return (text || "MINE").trim().toUpperCase();
+  }
+
   function renderLocationsAll() {
     locationsSectionsEl.innerHTML = "";
 
-    if (customLocations.length > 0) {
-      var mineGroup = document.createElement("div");
-      mineGroup.className = "location-section";
-      var mineLabel = document.createElement("div");
-      mineLabel.className = "family-label";
-      mineLabel.textContent = "MINE";
-      mineGroup.appendChild(mineLabel);
-      customLocations.forEach(function (loc) {
-        mineGroup.appendChild(renderLocationRow(loc.id, loc.name, true));
-      });
-      locationsSectionsEl.appendChild(mineGroup);
-    }
+    /* group custom locations by their normalized section key, preserving
+       first-seen order for sections that don't match a hardcoded one */
+    var customBySection = {};
+    var customSectionOrder = [];
+    customLocations.forEach(function (loc) {
+      var key = normalizeSectionKey(loc.section);
+      if (!customBySection[key]) {
+        customBySection[key] = [];
+        customSectionOrder.push(key);
+      }
+      customBySection[key].push(loc);
+    });
 
+    var hardcodedKeys = {};
+    LOCATION_SECTIONS.forEach(function (s) { hardcodedKeys[normalizeSectionKey(s.name)] = true; });
+
+    /* custom sections with no hardcoded match get their own group, shown first */
+    customSectionOrder.forEach(function (key) {
+      if (hardcodedKeys[key]) return;
+      var group = document.createElement("div");
+      group.className = "location-section";
+      var label = document.createElement("div");
+      label.className = "family-label";
+      label.textContent = key;
+      group.appendChild(label);
+      customBySection[key].forEach(function (loc) {
+        group.appendChild(renderLocationRow(loc.id, loc.name, true));
+      });
+      locationsSectionsEl.appendChild(group);
+    });
+
+    /* hardcoded sections, with any matching custom locations appended at the end */
     LOCATION_SECTIONS.forEach(function (section) {
+      var key = normalizeSectionKey(section.name);
       var visibleLocations = section.locations.filter(function (loc) {
         if (!locationsShortlistOnly) return true;
         return removedLocationIds.indexOf(loc.id) === -1;
       });
-      if (visibleLocations.length === 0) return;
+      var matchingCustom = customBySection[key] || [];
+      if (visibleLocations.length === 0 && matchingCustom.length === 0) return;
 
       var group = document.createElement("div");
       group.className = "location-section";
@@ -2538,6 +2566,9 @@
       group.appendChild(label);
       visibleLocations.forEach(function (loc) {
         group.appendChild(renderLocationRow(loc.id, loc.name, false));
+      });
+      matchingCustom.forEach(function (loc) {
+        group.appendChild(renderLocationRow(loc.id, loc.name, true));
       });
       locationsSectionsEl.appendChild(group);
     });
@@ -2554,6 +2585,7 @@
   var addLocationLinkBtn = document.getElementById("add-location-link-btn");
   var addLocationForm = document.getElementById("add-location-form");
   var addLocationInput = document.getElementById("add-location-input");
+  var addLocationSectionInput = document.getElementById("add-location-section-input");
   var addLocationSubmitBtn = document.getElementById("add-location-submit-btn");
 
   addLocationLinkBtn.addEventListener("click", function () {
@@ -2565,15 +2597,20 @@
   function submitAddLocation() {
     var name = addLocationInput.value.trim();
     if (!name) return;
-    customLocations.push({ id: makeCustomLocationId(), name: name, section: "MINE" });
+    var section = addLocationSectionInput.value.trim();
+    customLocations.push({ id: makeCustomLocationId(), name: name, section: section || "MINE" });
     saveCustomLocations(customLocations);
     addLocationInput.value = "";
+    addLocationSectionInput.value = "";
     addLocationForm.style.display = "none";
     renderLocationsAll();
   }
 
   addLocationSubmitBtn.addEventListener("click", submitAddLocation);
   addLocationInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") submitAddLocation();
+  });
+  addLocationSectionInput.addEventListener("keydown", function (e) {
     if (e.key === "Enter") submitAddLocation();
   });
 

@@ -1,4 +1,4 @@
-var CACHE_NAME = "from-the-hide-v13";
+var CACHE_NAME = "from-the-hide-v14";
 
 var ASSETS = [
   "./",

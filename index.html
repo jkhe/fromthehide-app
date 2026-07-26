@@ -98,12 +98,13 @@
     flex: 1;
     background: none;
     border: none;
-    padding: 16px 0 14px;
+    padding: 16px 2px 14px;
     font-family: inherit;
-    font-size: 11px;
-    letter-spacing: 3px;
+    font-size: 10px;
+    letter-spacing: 1.5px;
     color: #444;
     transition: color 0.2s ease;
+    white-space: nowrap;
   }
 
   .nav-btn.active {
@@ -421,7 +422,8 @@
     border-bottom: 1px solid #1a1a1a;
   }
 
-  .subnav-btn {
+  .subnav-btn,
+  .loc-subnav-btn {
     background: none;
     border: none;
     font-family: inherit;
@@ -431,7 +433,8 @@
     padding: 4px 0;
   }
 
-  .subnav-btn.active {
+  .subnav-btn.active,
+  .loc-subnav-btn.active {
     color: #bbb;
     border-bottom: 1px solid #555;
   }
@@ -794,6 +797,210 @@
     text-align: center;
     padding: 60px 20px;
   }
+
+  /* ================= LOCATIONS TAB ================= */
+  .locations-toolbar {
+    padding: 16px 20px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  .locations-link-btn {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #555;
+    padding: 4px 0;
+    text-align: left;
+  }
+
+  .locations-link-btn:active {
+    color: #999;
+  }
+
+  .locations-add-form {
+    display: flex;
+    gap: 8px;
+  }
+
+  #add-location-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    color: #999;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 9px 10px;
+    border-radius: 3px;
+    outline: none;
+  }
+
+  #add-location-input::placeholder {
+    color: #555;
+  }
+
+  .locations-add-btn {
+    flex: 0 0 auto;
+    background: none;
+    border: 1px solid #333;
+    color: #888;
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 0 14px;
+    border-radius: 3px;
+  }
+
+  .shortlist-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .shortlist-count {
+    font-size: 10px;
+    color: #444;
+  }
+
+  .location-section {
+    padding: 18px 20px 4px;
+  }
+
+  .location-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  .location-toggle-zone {
+    flex: 0 0 auto;
+    background: none;
+    border: none;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .location-checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: #666;
+  }
+
+  .location-delete-x {
+    color: #444;
+    font-size: 16px;
+    line-height: 1;
+  }
+
+  .location-name-zone {
+    flex: 1 1 auto;
+    min-width: 0;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 14px;
+    color: #999;
+    text-align: left;
+    padding: 2px 0;
+    line-height: 1.4;
+  }
+
+  .location-name-zone.removed {
+    color: #3a3a3a;
+    text-decoration: line-through;
+  }
+
+  .hide-entry-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: #bbb;
+  }
+
+  /* --- Location detail overlay --- */
+  .location-detail-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    background: #0e0e0e;
+    display: none;
+    flex-direction: column;
+  }
+
+  .location-detail-overlay.active {
+    display: flex;
+  }
+
+  .location-detail-back {
+    align-self: flex-end;
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 22px;
+    line-height: 1;
+    padding: calc(env(safe-area-inset-top, 0px) + 16px) 20px 16px;
+  }
+
+  .location-detail-name {
+    font-size: 22px;
+    font-weight: 300;
+    color: #ccc;
+    padding: 0 20px 20px;
+    line-height: 1.4;
+  }
+
+  .location-detail-form {
+    display: flex;
+    gap: 8px;
+    padding: 0 20px 16px;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  #location-detail-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    color: #999;
+    font-family: inherit;
+    font-size: 13px;
+    padding: 9px 10px;
+    border-radius: 3px;
+    outline: none;
+  }
+
+  #location-detail-input::placeholder {
+    color: #555;
+  }
+
+  .location-detail-add-btn {
+    flex: 0 0 auto;
+    background: none;
+    border: 1px solid #333;
+    color: #888;
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 0 14px;
+    border-radius: 3px;
+  }
+
+  .location-detail-overlay .log-list {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 </style>
 </head>
 <body>
@@ -871,6 +1078,38 @@
       <div class="log-list" id="log-list"></div>
     </section>
 
+    <!-- ============ LOCATIONS ============ -->
+    <section id="view-locations" class="view">
+      <nav class="colour-subnav">
+        <button class="loc-subnav-btn active" data-locsubview="all">ALL</button>
+        <button class="loc-subnav-btn" data-locsubview="hides">HIDES</button>
+      </nav>
+
+      <div id="locsubview-all" class="colour-subview active">
+        <div class="locations-toolbar">
+          <button class="locations-link-btn" id="add-location-link-btn">+ ADD LOCATION</button>
+          <div class="locations-add-form" id="add-location-form" style="display:none">
+            <input type="text" id="add-location-input" placeholder="name" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <button class="locations-add-btn" id="add-location-submit-btn">ADD</button>
+          </div>
+          <div class="shortlist-row">
+            <button class="locations-link-btn" id="shortlist-toggle-btn">SHOW SHORTLIST</button>
+            <span class="shortlist-count" id="shortlist-count"></span>
+          </div>
+        </div>
+        <div id="locations-sections"></div>
+      </div>
+
+      <div id="locsubview-hides" class="colour-subview">
+        <div class="log-input-row">
+          <input type="text" id="hide-name-input" placeholder="where" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <input type="text" id="hide-note-input" placeholder="what you'd shoot from here" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+          <button class="log-add-btn" id="hide-add-btn">ADD</button>
+        </div>
+        <div class="log-list" id="hides-list"></div>
+      </div>
+    </section>
+
   </div>
 
   <nav class="bottom-nav">
@@ -878,6 +1117,7 @@
     <button class="nav-btn" data-view="colour">COLOUR</button>
     <button class="nav-btn" data-view="lens">LENS</button>
     <button class="nav-btn" data-view="log">LOG</button>
+    <button class="nav-btn" data-view="locations">LOCATIONS</button>
   </nav>
 
 </div>
@@ -893,6 +1133,16 @@
     <div class="lens-overlay-list" id="lens-overlay-list"></div>
     <button class="lens-overlay-done" id="lens-overlay-done-btn">done</button>
   </div>
+</div>
+
+<div class="location-detail-overlay" id="location-detail-overlay">
+  <button class="location-detail-back" id="location-detail-back-btn">&times;</button>
+  <div class="location-detail-name" id="location-detail-name"></div>
+  <div class="location-detail-form">
+    <input type="text" id="location-detail-input" placeholder="what happened here" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <button class="location-detail-add-btn" id="location-detail-add-btn">ADD ENTRY</button>
+  </div>
+  <div class="log-list" id="location-detail-list"></div>
 </div>
 
 <script>
@@ -1746,7 +1996,8 @@
     look: document.getElementById("view-look"),
     colour: document.getElementById("view-colour"),
     lens: document.getElementById("view-lens"),
-    log: document.getElementById("view-log")
+    log: document.getElementById("view-log"),
+    locations: document.getElementById("view-locations")
   };
   var currentView = "look";
 
@@ -2040,6 +2291,478 @@
     logNoteInput.value = "";
     logSuggestionsEl.classList.remove("active");
   });
+
+  /* ======================================================
+     LOCATIONS TAB
+     ====================================================== */
+
+  var LOCATION_SECTIONS = [
+    { name: "THE CITY & BANK", locations: [
+      { id: "bank", name: "Bank junction and Cornhill" },
+      { id: "alleys", name: "Birchin Lane / Change Alley / Ball Court" },
+      { id: "threadneedle", name: "Threadneedle Street compression" },
+      { id: "rood", name: "Rood Lane — double-lighting effect" },
+      { id: "fleet", name: "Fleet Street" },
+      { id: "temple", name: "Temple and Inns of Court" },
+      { id: "barbican", name: "Barbican estate and conservatory" },
+      { id: "onenewchange", name: "One New Change rooftop" },
+      { id: "stpauls", name: "St Paul's and Peter's Hill" },
+      { id: "garden120", name: "Garden at 120 — Fenchurch St rooftop (free)" },
+      { id: "skygarden", name: "Sky Garden (book 3 weeks ahead)" }
+    ]},
+    { name: "SOUTH BANK & BERMONDSEY", locations: [
+      { id: "southbank", name: "South Bank riverside walk" },
+      { id: "waterloo", name: "Waterloo Bridge" },
+      { id: "tate", name: "Tate Modern Blavatnik viewing level (free)" },
+      { id: "millennium", name: "Millennium Bridge" },
+      { id: "borough", name: "Borough Market interior" },
+      { id: "bermondsey", name: "Bermondsey Street" },
+      { id: "shadthames", name: "Shad Thames" },
+      { id: "maltby", name: "Maltby Street / Spa Terminus (Sat/Sun only)" }
+    ]},
+    { name: "EAST LONDON", locations: [
+      { id: "shoreditch", name: "Shoreditch and Brick Lane" },
+      { id: "columbia", name: "Columbia Road flower market (Sunday only)" },
+      { id: "spitalfields", name: "Spitalfields Market" },
+      { id: "whitechapel", name: "Whitechapel" }
+    ]},
+    { name: "WEST END", locations: [
+      { id: "soho", name: "Soho — night shooting" },
+      { id: "chinatown", name: "Chinatown" },
+      { id: "nealyard", name: "Neal's Yard — colour" },
+      { id: "sevendials", name: "Seven Dials" },
+      { id: "covent", name: "Covent Garden" }
+    ]},
+    { name: "NORTH LONDON", locations: [
+      { id: "kingscross", name: "King's Cross / Coal Drops Yard" },
+      { id: "camden", name: "Camden Market and canal" },
+      { id: "primrose", name: "Primrose Hill viewpoint" }
+    ]},
+    { name: "SOUTH EAST — NEAR YOU", locations: [
+      { id: "peckham", name: "Peckham Levels" },
+      { id: "brixton", name: "Brixton Village and Market Row" },
+      { id: "horniman", name: "Horniman Conservatory and Aquarium" },
+      { id: "blackfriars", name: "Blackfriars Bridge and station" },
+      { id: "greenwich", name: "Greenwich and Deptford Creek" }
+    ]},
+    { name: "FURTHER AFIELD", locations: [
+      { id: "canary", name: "Canary Wharf and Adams Plaza Bridge" },
+      { id: "battersea", name: "Battersea Power Station" },
+      { id: "deal", name: "Deal, Kent — day trip" },
+      { id: "brighton", name: "Brighton — day trip" },
+      { id: "canvey", name: "Canvey Island — day trip" }
+    ]}
+  ];
+
+  var LOCATIONS_REMOVED_KEY = "fth-locations-removed";
+  var LOCATIONS_CUSTOM_KEY = "fth-locations-custom";
+  var HIDES_KEY = "fth-hides";
+  var LOCATION_LOGS_KEY = "fth-location-logs";
+
+  function loadRemovedLocationIds() {
+    try {
+      var raw = localStorage.getItem(LOCATIONS_REMOVED_KEY);
+      if (raw === null) return [];
+      var parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveRemovedLocationIds(ids) {
+    try {
+      localStorage.setItem(LOCATIONS_REMOVED_KEY, JSON.stringify(ids));
+    } catch (e) {}
+  }
+
+  function loadCustomLocations() {
+    try {
+      var raw = localStorage.getItem(LOCATIONS_CUSTOM_KEY);
+      if (raw === null) return [];
+      var parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveCustomLocations(list) {
+    try {
+      localStorage.setItem(LOCATIONS_CUSTOM_KEY, JSON.stringify(list));
+    } catch (e) {}
+  }
+
+  function loadHides() {
+    try {
+      var raw = localStorage.getItem(HIDES_KEY);
+      if (raw === null) return [];
+      var parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function saveHides(list) {
+    try {
+      localStorage.setItem(HIDES_KEY, JSON.stringify(list));
+    } catch (e) {}
+  }
+
+  function loadLocationLogs() {
+    try {
+      var raw = localStorage.getItem(LOCATION_LOGS_KEY);
+      if (raw === null) return {};
+      var parsed = JSON.parse(raw);
+      return (parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? parsed : {};
+    } catch (e) {
+      return {};
+    }
+  }
+
+  function saveLocationLogs(obj) {
+    try {
+      localStorage.setItem(LOCATION_LOGS_KEY, JSON.stringify(obj));
+    } catch (e) {}
+  }
+
+  function makeCustomLocationId() {
+    if (window.crypto && typeof window.crypto.randomUUID === "function") {
+      return window.crypto.randomUUID();
+    }
+    return "custom-" + Date.now() + "-" + Math.floor(Math.random() * 100000);
+  }
+
+  function formatShortDate(ts) {
+    var d = new Date(ts);
+    return d.getDate() + " " + MONTH_NAMES[d.getMonth()];
+  }
+
+  var removedLocationIds = loadRemovedLocationIds();
+  var customLocations = loadCustomLocations();
+  var hidesEntries = loadHides();
+  var locationLogs = loadLocationLogs();
+  var locationsShortlistOnly = false;
+
+  function totalKeptCount() {
+    var hardcodedTotal = 0;
+    LOCATION_SECTIONS.forEach(function (s) { hardcodedTotal += s.locations.length; });
+    var keptHardcoded = hardcodedTotal - removedLocationIds.length;
+    return keptHardcoded + customLocations.length;
+  }
+
+  /* ---- ALL sub-view ---- */
+  var locationsSectionsEl = document.getElementById("locations-sections");
+  var shortlistCountEl = document.getElementById("shortlist-count");
+  var shortlistToggleBtn = document.getElementById("shortlist-toggle-btn");
+
+  function renderLocationRow(id, name, isCustom) {
+    var row = document.createElement("div");
+    row.className = "location-row";
+
+    var toggleZone = document.createElement("button");
+    toggleZone.className = "location-toggle-zone";
+
+    if (isCustom) {
+      var xSpan = document.createElement("span");
+      xSpan.className = "location-delete-x";
+      xSpan.textContent = "×";
+      toggleZone.appendChild(xSpan);
+      toggleZone.addEventListener("click", function () {
+        var idx = customLocations.findIndex(function (l) { return l.id === id; });
+        if (idx !== -1) {
+          customLocations.splice(idx, 1);
+          saveCustomLocations(customLocations);
+          renderLocationsAll();
+        }
+      });
+    } else {
+      var checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.className = "location-checkbox";
+      checkbox.checked = removedLocationIds.indexOf(id) === -1;
+      checkbox.addEventListener("change", function () {
+        var idx = removedLocationIds.indexOf(id);
+        if (!checkbox.checked && idx === -1) removedLocationIds.push(id);
+        if (checkbox.checked && idx !== -1) removedLocationIds.splice(idx, 1);
+        saveRemovedLocationIds(removedLocationIds);
+        renderLocationsAll();
+      });
+      toggleZone.appendChild(checkbox);
+    }
+
+    var nameZone = document.createElement("button");
+    nameZone.className = "location-name-zone";
+    if (!isCustom && removedLocationIds.indexOf(id) !== -1) {
+      nameZone.classList.add("removed");
+    }
+    nameZone.textContent = name;
+    nameZone.addEventListener("click", function () {
+      openLocationDetail(id, name);
+    });
+
+    row.appendChild(toggleZone);
+    row.appendChild(nameZone);
+    return row;
+  }
+
+  function renderLocationsAll() {
+    locationsSectionsEl.innerHTML = "";
+
+    if (customLocations.length > 0) {
+      var mineGroup = document.createElement("div");
+      mineGroup.className = "location-section";
+      var mineLabel = document.createElement("div");
+      mineLabel.className = "family-label";
+      mineLabel.textContent = "MINE";
+      mineGroup.appendChild(mineLabel);
+      customLocations.forEach(function (loc) {
+        mineGroup.appendChild(renderLocationRow(loc.id, loc.name, true));
+      });
+      locationsSectionsEl.appendChild(mineGroup);
+    }
+
+    LOCATION_SECTIONS.forEach(function (section) {
+      var visibleLocations = section.locations.filter(function (loc) {
+        if (!locationsShortlistOnly) return true;
+        return removedLocationIds.indexOf(loc.id) === -1;
+      });
+      if (visibleLocations.length === 0) return;
+
+      var group = document.createElement("div");
+      group.className = "location-section";
+      var label = document.createElement("div");
+      label.className = "family-label";
+      label.textContent = section.name;
+      group.appendChild(label);
+      visibleLocations.forEach(function (loc) {
+        group.appendChild(renderLocationRow(loc.id, loc.name, false));
+      });
+      locationsSectionsEl.appendChild(group);
+    });
+
+    shortlistCountEl.textContent = totalKeptCount() + " kept";
+  }
+
+  shortlistToggleBtn.addEventListener("click", function () {
+    locationsShortlistOnly = !locationsShortlistOnly;
+    shortlistToggleBtn.textContent = locationsShortlistOnly ? "SHOW ALL" : "SHOW SHORTLIST";
+    renderLocationsAll();
+  });
+
+  var addLocationLinkBtn = document.getElementById("add-location-link-btn");
+  var addLocationForm = document.getElementById("add-location-form");
+  var addLocationInput = document.getElementById("add-location-input");
+  var addLocationSubmitBtn = document.getElementById("add-location-submit-btn");
+
+  addLocationLinkBtn.addEventListener("click", function () {
+    var showing = addLocationForm.style.display !== "none";
+    addLocationForm.style.display = showing ? "none" : "flex";
+    if (!showing) addLocationInput.focus();
+  });
+
+  function submitAddLocation() {
+    var name = addLocationInput.value.trim();
+    if (!name) return;
+    customLocations.push({ id: makeCustomLocationId(), name: name, section: "MINE" });
+    saveCustomLocations(customLocations);
+    addLocationInput.value = "";
+    addLocationForm.style.display = "none";
+    renderLocationsAll();
+  }
+
+  addLocationSubmitBtn.addEventListener("click", submitAddLocation);
+  addLocationInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") submitAddLocation();
+  });
+
+  /* ---- HIDES sub-view ---- */
+  var hidesListEl = document.getElementById("hides-list");
+  var hideNameInput = document.getElementById("hide-name-input");
+  var hideNoteInput = document.getElementById("hide-note-input");
+  var hideAddBtn = document.getElementById("hide-add-btn");
+
+  function renderHides() {
+    hidesListEl.innerHTML = "";
+
+    if (hidesEntries.length === 0) {
+      var empty = document.createElement("div");
+      empty.className = "log-empty";
+      empty.textContent = "No hides logged yet.";
+      hidesListEl.appendChild(empty);
+      return;
+    }
+
+    var sorted = hidesEntries.slice().sort(function (a, b) { return b.timestamp - a.timestamp; });
+    sorted.forEach(function (entry) {
+      var row = document.createElement("div");
+      row.className = "log-entry";
+
+      var main = document.createElement("div");
+      main.className = "log-entry-main";
+      var nameEl = document.createElement("div");
+      nameEl.className = "hide-entry-name";
+      nameEl.textContent = entry.name;
+      main.appendChild(nameEl);
+      if (entry.note) {
+        var noteEl = document.createElement("div");
+        noteEl.className = "log-entry-note";
+        noteEl.textContent = entry.note;
+        main.appendChild(noteEl);
+      }
+
+      var dateEl = document.createElement("div");
+      dateEl.className = "log-entry-date";
+      dateEl.textContent = formatShortDate(entry.timestamp);
+
+      var delBtn = document.createElement("button");
+      delBtn.className = "log-delete-btn";
+      delBtn.textContent = "×";
+      delBtn.addEventListener("click", function () {
+        var idx = hidesEntries.indexOf(entry);
+        if (idx !== -1) {
+          hidesEntries.splice(idx, 1);
+          saveHides(hidesEntries);
+          renderHides();
+        }
+      });
+
+      row.appendChild(main);
+      row.appendChild(dateEl);
+      row.appendChild(delBtn);
+      hidesListEl.appendChild(row);
+    });
+  }
+
+  function submitHide() {
+    var name = hideNameInput.value.trim();
+    var note = hideNoteInput.value.trim();
+    if (!name) return;
+    hidesEntries.push({ name: name, note: note, timestamp: Date.now() });
+    saveHides(hidesEntries);
+    hideNameInput.value = "";
+    hideNoteInput.value = "";
+    renderHides();
+  }
+
+  hideAddBtn.addEventListener("click", submitHide);
+  hideNameInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") submitHide();
+  });
+  hideNoteInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") submitHide();
+  });
+
+  /* ---- ALL / HIDES sub-nav switching (scoped separately from COLOUR's) ---- */
+  var locSubnavBtns = document.querySelectorAll(".loc-subnav-btn");
+  var locSubviews = {
+    all: document.getElementById("locsubview-all"),
+    hides: document.getElementById("locsubview-hides")
+  };
+
+  function switchLocationsSubview(key) {
+    locSubnavBtns.forEach(function (b) {
+      b.classList.toggle("active", b.dataset.locsubview === key);
+    });
+    Object.keys(locSubviews).forEach(function (k) {
+      locSubviews[k].classList.toggle("active", k === key);
+    });
+  }
+
+  locSubnavBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      switchLocationsSubview(btn.dataset.locsubview);
+    });
+  });
+
+  /* ---- per-location detail view ---- */
+  var locationDetailOverlay = document.getElementById("location-detail-overlay");
+  var locationDetailNameEl = document.getElementById("location-detail-name");
+  var locationDetailInput = document.getElementById("location-detail-input");
+  var locationDetailAddBtn = document.getElementById("location-detail-add-btn");
+  var locationDetailListEl = document.getElementById("location-detail-list");
+  var locationDetailBackBtn = document.getElementById("location-detail-back-btn");
+  var currentDetailLocationId = null;
+
+  function renderLocationDetailEntries() {
+    locationDetailListEl.innerHTML = "";
+    var entries = locationLogs[currentDetailLocationId] || [];
+
+    if (entries.length === 0) {
+      var empty = document.createElement("div");
+      empty.className = "log-empty";
+      empty.textContent = "Nothing logged here yet. Come back and add to it.";
+      locationDetailListEl.appendChild(empty);
+      return;
+    }
+
+    var sorted = entries.slice().sort(function (a, b) { return b.timestamp - a.timestamp; });
+    sorted.forEach(function (entry) {
+      var row = document.createElement("div");
+      row.className = "log-entry";
+
+      var main = document.createElement("div");
+      main.className = "log-entry-main";
+      var textEl = document.createElement("div");
+      textEl.className = "hide-entry-name";
+      textEl.textContent = entry.text;
+      main.appendChild(textEl);
+
+      var dateEl = document.createElement("div");
+      dateEl.className = "log-entry-date";
+      dateEl.textContent = formatShortDate(entry.timestamp);
+
+      var delBtn = document.createElement("button");
+      delBtn.className = "log-delete-btn";
+      delBtn.textContent = "×";
+      delBtn.addEventListener("click", function () {
+        var list = locationLogs[currentDetailLocationId] || [];
+        var idx = list.indexOf(entry);
+        if (idx !== -1) {
+          list.splice(idx, 1);
+          locationLogs[currentDetailLocationId] = list;
+          saveLocationLogs(locationLogs);
+          renderLocationDetailEntries();
+        }
+      });
+
+      row.appendChild(main);
+      row.appendChild(dateEl);
+      row.appendChild(delBtn);
+      locationDetailListEl.appendChild(row);
+    });
+  }
+
+  function openLocationDetail(id, name) {
+    currentDetailLocationId = id;
+    locationDetailNameEl.textContent = name;
+    locationDetailInput.value = "";
+    renderLocationDetailEntries();
+    locationDetailOverlay.classList.add("active");
+  }
+
+  function submitLocationDetailEntry() {
+    var text = locationDetailInput.value.trim();
+    if (!text || !currentDetailLocationId) return;
+    var list = locationLogs[currentDetailLocationId] || [];
+    list.push({ text: text, timestamp: Date.now() });
+    locationLogs[currentDetailLocationId] = list;
+    saveLocationLogs(locationLogs);
+    locationDetailInput.value = "";
+    renderLocationDetailEntries();
+  }
+
+  locationDetailAddBtn.addEventListener("click", submitLocationDetailEntry);
+  locationDetailInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") submitLocationDetailEntry();
+  });
+  locationDetailBackBtn.addEventListener("click", function () {
+    locationDetailOverlay.classList.remove("active");
+  });
+
+  renderLocationsAll();
+  renderHides();
 
   /* ======================================================
      SERVICE WORKER

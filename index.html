@@ -152,15 +152,6 @@
     font-weight: 300;
   }
 
-  .look-lens-suggestion {
-    font-size: 10px;
-    letter-spacing: 2px;
-    color: #666;
-    text-transform: uppercase;
-    margin-top: 36px;
-    min-height: 12px;
-  }
-
   .look-goback-heading {
     font-size: 24px;
     letter-spacing: 1px;
@@ -1264,6 +1255,22 @@
     { text: "Stay in one spot and turn in a full circle before you decide what to shoot.", pace: "any", axis: "work" },
     { text: "Find the height where the scene stops making sense, then the height where it does.", pace: "any", axis: "work" },
     { text: "Move closer until detail arrives, then decide if you needed it.", pace: "any", axis: "work" },
+    { text: "Find a screen nobody's looking at and photograph what it's actually showing.", pace: "any", axis: "veil" },
+    { text: "Find where a screen's light lands on something that isn't the screen.", pace: "any", axis: "veil" },
+    { text: "Photograph a display through glass, not the display itself.", pace: "any", axis: "veil" },
+    { text: "Find the specific colour a screen makes the air around it.", pace: "any", axis: "veil" },
+    { text: "Let a screen be the only light source in the frame.", pace: "any", axis: "veil" },
+    { text: "Find a screen already interpreting colour before you do.", pace: "any", axis: "veil" },
+    { text: "Don't test four positions today. Trust the first one and see what it gives you.", pace: "any", axis: "work" },
+    { text: "Fill the frame edge to edge. Leave nothing unaccounted for.", pace: "any", axis: "optical" },
+    { text: "Choose the least dramatic thing available and give it the most disciplined frame you can.", pace: "any", axis: "optical" },
+    { text: "Find one colour relationship and let it be the only thing happening in the frame.", pace: "any", axis: "optical" },
+    { text: "Photograph something with no story, and refuse to add one.", pace: "any", axis: "seeing" },
+    { text: "Compose as if the frame will be paused and studied, not glanced at.", pace: "any", axis: "optical" },
+    { text: "Cut everything from the frame that isn't doing something.", pace: "any", axis: "optical" },
+    { text: "Find the most ordinary thing in view and frame it as if it's the only thing that exists.", pace: "any", axis: "seeing" },
+    { text: "Choose restraint over inclusion. One relationship, not three.", pace: "any", axis: "optical" },
+    { text: "Give the frame to something with nothing remarkable about it.", pace: "any", axis: "seeing" },
   ];
 
   var LENS_CONTAINERS = [
@@ -1336,6 +1343,37 @@
     { text: "The point where near and far agree.", axis: "work" },
     { text: "What a full turn on the spot revealed.", axis: "work" },
     { text: "The version of the scene only this position shows.", axis: "work" },
+    { text: "What's lost the further back you stand.", axis: "distance" },
+    { text: "The version only visible from here.", axis: "distance" },
+    { text: "What closes the gap.", axis: "distance" },
+    { text: "What doesn't survive being approached.", axis: "distance" },
+    { text: "What only works from exactly this far away.", axis: "distance" },
+    { text: "What holds the boundary up.", axis: "space" },
+    { text: "The inside of somewhere unremarkable.", axis: "space" },
+    { text: "What a small space does to attention.", axis: "space" },
+    { text: "The threshold, not either side of it.", axis: "space" },
+    { text: "What only fits one body at a time.", axis: "space" },
+    { text: "What's still lit when everything else has gone.", axis: "light" },
+    { text: "The colour a shadow actually is.", axis: "light" },
+    { text: "What the light is deciding.", axis: "light" },
+    { text: "The last thing the day touches.", axis: "light" },
+    { text: "What's brighter than it should be.", axis: "light" },
+    { text: "The colour before you name it.", axis: "shade" },
+    { text: "What a shade carries that a word doesn't.", axis: "shade" },
+    { text: "The version of the colour that's already fading.", axis: "shade" },
+    { text: "What's been the same colour for longer than it should.", axis: "shade" },
+    { text: "The shade nobody chose on purpose.", axis: "shade" },
+    { text: "What a colour does when nothing else is happening.", axis: "shade" },
+    { text: "The colour a screen decided for you.", axis: "veil" },
+    { text: "Light that's already been translated once.", axis: "veil" },
+    { text: "What a display does to the dark around it.", axis: "veil" },
+    { text: "The image inside the image.", axis: "veil" },
+    { text: "What arrives without testing for it.", axis: "work" },
+    { text: "What two colours are doing, and nothing else.", axis: "optical" },
+    { text: "The ordinariness, held steady.", axis: "seeing" },
+    { text: "What's left when the drama is removed.", axis: "seeing" },
+    { text: "The frame with nothing wasted.", axis: "optical" },
+    { text: "What one relationship looks like when it's the only one.", axis: "optical" },
   ];
 
   var FAMILIES = [
@@ -1608,7 +1646,7 @@
     var scores = loadPromptScores();
     var weights = items.map(function (item) {
       var raw = scores[getText(item)] || 0;
-      return 1 + Math.max(raw, -0.8);
+      return 1 + Math.min(Math.max(raw, -0.8), 5);
     });
     var total = weights.reduce(function (a, b) { return a + b; }, 0);
     var r = Math.random() * total;
@@ -1621,6 +1659,23 @@
 
   var currentContainerText = null;
   var currentAttentionText = null;
+
+  /* ---- no-immediate-repeat cooldown (session-only, not persisted) ---- */
+  var RECENT_COOLDOWN_SIZE = 5;
+  var recentContainerTexts = [];
+  var recentAttentionTexts = [];
+
+  function applyCooldown(items, getText, recentList) {
+    var filtered = items.filter(function (item) {
+      return recentList.indexOf(getText(item)) === -1;
+    });
+    return filtered.length > 0 ? filtered : items;
+  }
+
+  function pushRecent(recentList, text) {
+    recentList.push(text);
+    if (recentList.length > RECENT_COOLDOWN_SIZE) recentList.shift();
+  }
 
   function applyFeedback(kept) {
     if (!currentContainerText && !currentAttentionText) return;
@@ -1747,17 +1802,18 @@
 
   function renderWheelPair() {
     var pool = getContainerPool();
-    var containerItem = weightedRandomPick(pool, function (item) { return item.text; });
+    var containerCandidates = applyCooldown(pool, function (item) { return item.text; }, recentContainerTexts);
+    var containerItem = weightedRandomPick(containerCandidates, function (item) { return item.text; });
 
     var attentionPool = containerItem.axis
       ? ATTENTIONS.filter(function (a) { return a.axis === containerItem.axis; })
       : ATTENTIONS;
     if (attentionPool.length === 0) attentionPool = ATTENTIONS;
-    var attentionItem = weightedRandomPick(attentionPool, function (item) { return item.text; });
+    var attentionCandidates = applyCooldown(attentionPool, function (item) { return item.text; }, recentAttentionTexts);
+    var attentionItem = weightedRandomPick(attentionCandidates, function (item) { return item.text; });
 
-    var selectedLenses = loadSelectedLenses();
-    var lensPool = selectedLenses.length > 0 ? selectedLenses : LENS_SELECTOR_ORDER;
-    var lensName = lensPool[Math.floor(Math.random() * lensPool.length)];
+    pushRecent(recentContainerTexts, containerItem.text);
+    pushRecent(recentAttentionTexts, attentionItem.text);
 
     currentContainerText = containerItem.text;
     currentAttentionText = attentionItem.text;
@@ -1766,7 +1822,6 @@
       '<div class="look-container-text" id="look-container-text"></div>' +
       '<div class="look-divider"></div>' +
       '<div class="look-attention-text" id="look-attention-text"></div>' +
-      '<div class="look-lens-suggestion" id="look-lens-text"></div>' +
       '<div class="look-feedback-row">' +
       '<button class="look-feedback-btn" id="feedback-keep-btn">kept it</button>' +
       '<button class="look-feedback-btn" id="feedback-skip-btn">skip</button>' +
@@ -1774,7 +1829,6 @@
 
     renderShadeLinkedText(document.getElementById("look-container-text"), containerItem.text);
     renderShadeLinkedText(document.getElementById("look-attention-text"), attentionItem.text);
-    document.getElementById("look-lens-text").textContent = lensName;
   }
 
   function renderJustWalk() {

@@ -1505,10 +1505,10 @@
   var LENSES = [
     { name: "Ricoh 28mm", desc: "Immersive. You are inside the rhythm of the street, not observing it. The world comes to you at full density. Everything is present simultaneously. Use when you want to disappear." },
     { name: "Sigma 45mm", desc: "The world as it presents itself. Neither wide nor compressed. No particular agenda. The most honest focal length — it doesn't impose a way of seeing. Use when you don't know what you're looking for." },
-    { name: "Zeiss Sonnar 50mm", desc: "Character and warmth at the cost of certainty. Wide open it renders softly, commits to the present moment over precision. This is close to the focal length used by photographers who built flatness through distance and framing rather than through a longer lens — the compression comes from where you stand, not what's mounted. Manual focus at this length demands a different pace. Use when you want to be in the image rather than at it." },
+    { name: "Voigtländer Skopar 50mm", desc: "Reliable and exact. No drift, no surprises — wherever you set focus and aperture, that's what you get. Genuine focus tab for fast, confident manual work. Use when the shot depends on trusting the lens completely, not on its mood." },
     { name: "Sigma 90mm", desc: "The beginning of selection. You are choosing what to compress, what to exclude. The world starts to flatten. Subjects separate from their contexts. Use when you know what you're looking for but not where it is." },
     { name: "Elmarit-R 135mm", desc: "Compression and surfaces. Distance closes. The far becomes adjacent to the near. Colour fields flatten. You are a long way from your subject and that distance is the image. Use when you want to see the city as colour rather than as place." },
-    { name: "Elmarit-R 180mm", desc: "Abstraction. The subject is no longer a subject — it is texture, field, fragment. You need space and patience. The world at this length is a different world. Use when you want to stop recognising things." }
+    { name: "APO-Telyt-R 180mm", desc: "Sharpest at real distance, weaker up close — don't use it under 3 metres. Lightest of the long lenses. Use for compression from genuine range, and for gestures you've already anticipated and are simply waiting on, not ones you're chasing." }
   ];
 
   /* ======================================================
@@ -1615,15 +1615,22 @@
 
   /* ---- today's lenses ---- */
   var LENS_TODAY_KEY = "fth-lenses-today";
-  var LENS_SELECTOR_ORDER = ["Ricoh 28mm", "Sigma 45mm", "Sigma 90mm", "Zeiss Sonnar 50mm", "Elmarit-R 135mm", "Elmarit-R 180mm"];
+  var LENS_SELECTOR_ORDER = ["Ricoh 28mm", "Sigma 45mm", "Sigma 90mm", "Voigtländer Skopar 50mm", "Elmarit-R 135mm", "APO-Telyt-R 180mm"];
 
   var PACE_MAP = {
     "Ricoh 28mm": "reactive",
     "Sigma 45mm": "reactive",
     "Sigma 90mm": "reactive",
-    "Zeiss Sonnar 50mm": "slow",
+    "Voigtländer Skopar 50mm": "slow",
     "Elmarit-R 135mm": "slow",
-    "Elmarit-R 180mm": "slow"
+    "APO-Telyt-R 180mm": "slow"
+  };
+
+  /* carries an existing stored selection through the lens rename so a
+     previously-unchecked 50mm/180mm doesn't silently reappear as checked */
+  var LENS_RENAME_MAP = {
+    "Zeiss Sonnar 50mm": "Voigtländer Skopar 50mm",
+    "Elmarit-R 180mm": "APO-Telyt-R 180mm"
   };
 
   function loadSelectedLenses() {
@@ -1631,7 +1638,8 @@
       var raw = localStorage.getItem(LENS_TODAY_KEY);
       if (raw === null) return LENS_SELECTOR_ORDER.slice();
       var parsed = JSON.parse(raw);
-      return Array.isArray(parsed) ? parsed : LENS_SELECTOR_ORDER.slice();
+      if (!Array.isArray(parsed)) return LENS_SELECTOR_ORDER.slice();
+      return parsed.map(function (name) { return LENS_RENAME_MAP[name] || name; });
     } catch (e) {
       return LENS_SELECTOR_ORDER.slice();
     }
